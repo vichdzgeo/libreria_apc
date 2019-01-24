@@ -25,9 +25,6 @@ def v_interseccion(vector_a, vector_b, path_s):
     v_interseccion(vector_a,vector_b,path_s)
     Esta funcion calcula la interseccion geometrica de las capas poligonales
     superpuestas es decir, vector_a y vector_b
-    Parametros:
-        vector_a =
-        vector_b =
     '''
     pr.runalg("saga:intersect", vector_a, vector_b, 0, path_s)
 
