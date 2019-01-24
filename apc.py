@@ -428,7 +428,9 @@ def extension_capa(path_capa):
         ymax = ext.yMaximum()
         extend=["norte :",ymax,"sur :",ymin,"este :",xmax,"oeste :",xmin]
         print extend
-        #borrar_shape(ruta_temp)
+        clean_var(vlayer_wgs84)
+
+        borrar_shape(ruta_temp)
 
 def borrar_shape(ruta_shape):
     path_dir="/".join(ruta_shape.split("/")[:-1])+"/"
@@ -436,3 +438,9 @@ def borrar_shape(ruta_shape):
     for archivo in lista_archivos:
         if archivo.split(".")[0]==nombre_archivo(ruta_shape):
             os.remove(path_dir+archivo)
+
+def clean_var(nombre_var):
+    gl=globals().copy()
+    for var in gl:
+        if var == nombre_var:
+            del globals()[var]
