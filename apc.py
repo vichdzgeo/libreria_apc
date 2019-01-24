@@ -108,17 +108,18 @@ def vcopia(path_vector, path_salida):
 
 
 def crear_campo(path_vector, nombre_campo, tipo):
-    ''' Crear_campo(path_vector,nombre_campo,tipo)
+    """
     Esta funcion crea un campo segun el tipo especificado.
-    Parametros:
-        path_vector: La ruta del archivo shapefile al cual se le quiere
-                      agregar el campo
-        nombre_campo: Nombre del campo nuevo
-        tipo: es el tipo de campo que se quiere crear:
-        Int: para crear un campo tipo entero
-        Double: para crear un campo tipo doble o flotante
-        String: para crear un campo tipo texto
-        Date: para crear un campo tipo fecha '''
+
+    :param path_vector: La ruta del archivo shapefile al cual se le quiere
+                        agregar el campo
+    :param nombre_campo: Nombre del campo nuevo
+    :param tipo: es el tipo de campo que se quiere crear:
+                 - Int: para crear un campo tipo entero
+                 - Double: para crear un campo tipo doble o flotante
+                 - String: para crear un campo tipo texto
+                 - Date: para crear un campo tipo fecha
+    """
 
     if len(nombre_campo) > 10:
         print("el nombre del campo debe contener maximo 10 caracteres")
@@ -139,7 +140,7 @@ def crear_campo(path_vector, nombre_campo, tipo):
                                                           QVariant.String)])
             return nombre
         elif tipo == "Date":
-            nombre=QgsVectorLayer(path_vector, "", "ogr")
+            nombre = QgsVectorLayer(path_vector, "", "ogr")
             nombre.dataProvider().addAttributes([QgsField(nombre_campo.lower(),
                                                           QVariant.Date)])
             return nombre
@@ -155,15 +156,14 @@ def colonia_ageb(path_salida,
                  campos_resampling,
                  nombre_temp):
     '''
-    Parametros:
-    path_salida = Ruta de la salida de los datos
-    path_agebs = ruta de la capa de agebs
-    path_colonias =  ruta de la capa de colonias
-    ageb_id = nombre del campo de id de los agebs
-    col_id = nombre del campo de id de la colonia
-    campos_resampling = nombre de los campos
-    nombre_temp = nombre del archivo que se genera al intersectar la copia de
-    colonias con la de agebs
+    :param path_salida: Ruta de la salida de los datos
+    :param path_agebs: ruta de la capa de agebs
+    :param path_colonias:  ruta de la capa de colonias
+    :param ageb_id: nombre del campo de id de los agebs
+    :param col_id: nombre del campo de id de la colonia
+    :param campos_resampling: nombre de los campos
+    :param nombre_temp: nombre del archivo que se genera al intersectar
+                        la copia de colonias con la de agebs
     '''
     new_geom_id = ageb_id
     new_geom = QgsVectorLayer(path_agebs, "", "ogr")
@@ -250,13 +250,14 @@ def est_raster_media(path_vector, path_raster, nombre_campo):
     '''
     Esta funcion calcula la media de los valores de pixel
     contenidos en un raster sobreponiendo una capa vectorial de poligonos
-    Parametros:
-        path_vector = ruta de la capa que contendra los datos extraidos del archivo raster
-        path_raster = ruta de la capa raster de la cual se extraera el valor
-        nombre_campo = nombre del campo que se creara para agregar los valores de la capa
-        raster a la capa vectorial
+
+    :param path_vector: ruta de la capa que contendra los datos extraidos
+                        del archivo raster
+    :param path_raster: ruta de la capa raster de la cual se extraera el valor
+    :param nombre_campo: nombre del campo que se creara para agregar los
+                         valores de la capa raster a la capa vectorial
     '''
-    vector=QgsVectorLayer(path_vector, "", "ogr")
+    vector = QgsVectorLayer(path_vector, "", "ogr")
     zoneStat = QgsZonalStatistics(vector, path_raster,
                                   nombre_campo, 1, QgsZonalStatistics.Mean)
     zoneStat.calculateStatistics(None)
@@ -264,12 +265,13 @@ def est_raster_media(path_vector, path_raster, nombre_campo):
 
 def raster_poligono(path_tif, path_s_vector, nombre_campo, epsg):
     """
-    Realiza el proceso de vectorizacion de una capa raster
-    Parametros:
-        path_tif= ruta de la capa raster
-        path_s_vector= ruta de salida de la capa vectorial
-        nombre_campo= nombre de un nuevo campo que contiene los valores de pixel
-        epsg:
+    Realiza el proceso de vectorizacion de una capa raster.
+
+    :param path_tif: ruta de la capa raster
+    :param path_s_vector: ruta de salida de la capa vectorial
+    :param nombre_campo: nombre de un nuevo campo que contiene los
+                         valores de pixel
+    :param epsg: ?
     """
     srs = osr.SpatialReference()
     srs.ImportFromEPSG(epsg)
@@ -283,7 +285,7 @@ def raster_poligono(path_tif, path_s_vector, nombre_campo, epsg):
     outShapefile = baseName
     driver = ogr.GetDriverByName("ESRI Shapefile")
 
-    path_v = path_s_vector + outShapefile+ ".shp"
+    path_v = path_s_vector + outShapefile + ".shp"
     outDatasource = driver.CreateDataSource(path_v)
     outLayer = outDatasource.CreateLayer(str(outShapefile), srs)
     newField = ogr.FieldDefn(nombre_campo, ogr.OFTInteger)
@@ -295,18 +297,21 @@ def raster_poligono(path_tif, path_s_vector, nombre_campo, epsg):
 
 def union_csv_shape(path_csv, path_vector, n_campo_comun, path_salida):
     '''
-        Funcion para unir una base de datos csv a un archivo shapefile, por medio de un campo en comun.
-        El resultado es una nueva capa vectorial con la union tabular.
-        Parametros:
-            path_csv = ruta del archivo csv, usar / en vez de '\'
-            path_vector = ruta de la capa vectorial
-            n_campo_comun = nombre del campo en comun
-            path_salida = ruta de salida para la nueva capa vectorial que contiene la union
+    Funcion para unir una base de datos csv a un archivo shapefile,
+    por medio de un campo en comun.  El resultado es una nueva capa
+    vectorial con la union tabular.
+
+    :param path_csv: ruta del archivo csv, usar / en vez de '\'
+    :param path_vector: ruta de la capa vectorial
+    :param n_campo_comun: nombre del campo en comun
+    :param path_salida: ruta de salida para la nueva capa vectorial
+                        que contiene la union
+
     '''
     vector = QgsVectorLayer(path_vector, "", "ogr")
     QgsMapLayerRegistry.instance().addMapLayer(vector)
 
-    #abre  el archivo csv
+    # abre  el archivo csv
     bd_csv_uri = "file:///" \
                  + path_csv \
                  + "?delimiter=%s&encoding=%s" % (",", "utf-8")
@@ -335,10 +340,10 @@ def union_csv_shape(path_csv, path_vector, n_campo_comun, path_salida):
 def v_cortar(path_mask, path_zona, path_salida):
     '''
     Esta funcion permite cortar dos capas vectoriales
-    Parametros:
-        path_mask= capa vectorial que sirve como mascara de recorte.
-        path_zona= capa vectorial de la capa a recortar.
-        path_salida= ruta de la capa generada por el proceso.
+
+    :param path_mask: capa vectorial que sirve como mascara de recorte.
+    :param path_zona: capa vectorial de la capa a recortar.
+    :param path_salid: ruta de la capa generada por el proceso.
     '''
     pr.runalg("saga:polygonclipping", path_mask, path_zona, path_salida)
 
@@ -422,14 +427,16 @@ def lista_archivos(lista_a, path, path_d, folders_check, tipo_ext):
     Esta funcion recursiva regresa una lista que contiene los
     archivos contenidos en un directorio segun el tipo de extension declarado.
 
-    Parametros:
-        lista_a=[]
-        path= ruta de la carpeta (primer nivel) que contiene los archivos
-        path_d= ruta de la carpeta (primer nivel) que contiene los archivos
-        folders_check= []
-        tipo_ext= se especifica la extension del archivo
-        ejemplo:
-        lista_shapes=apc.lista_archivos([],path_sig,path_sig,[],"shp")
+    Ejemplo:
+
+    lista_shapes=apc.lista_archivos([],path_sig,path_sig,[],"shp")
+
+
+    :param lista_a: []
+    :param path: ruta de la carpeta (primer nivel) que contiene los archivos
+    :param path_d: ruta de la carpeta (primer nivel) que contiene los archivos
+    :param folders_check: []
+    :param tipo_ext: se especifica la extension del archivo
     '''
     lista_tipo_ext = []
     if (path_d != path):
@@ -453,9 +460,9 @@ def lista_archivos(lista_a, path, path_d, folders_check, tipo_ext):
 
 def nombre_archivo(ruta):
     '''
-    Esta funcion extrae de la ruta el nombre del archivo shapefile
-    Parametros:
-        ruta = ruta de la capa shapefile
+    Esta funcion extrae de la ruta el nombre del archivo shapefile.
+
+    :param ruta: ruta de la capa shapefile
     '''
     nombre_cort = ruta.split("/")[-1:]
     nombre = nombre_cort[0].split(".")[0]
@@ -464,9 +471,7 @@ def nombre_archivo(ruta):
 
 def validacion_prj(lista_paths):
     '''
-    Parametros:
-
-        lista_paths=ruta donde se encuentran los archivos shapefile
+    :param lista_paths: ruta donde se encuentran los archivos shapefile
     '''
     sin_proj = []
     lista_shp = lista_archivos([], lista_paths, lista_paths, [], "shp")
