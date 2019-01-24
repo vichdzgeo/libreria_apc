@@ -37,12 +37,11 @@ def area_km2(path_vector, nombre_campo):
     Esta funcion genera un campo nuevo y calcula el area de cada
     poligono en kilometros cuadrados.
 
-    Parametros: path_vector = ruta de la capa vectorial, debe estar
-    en una proyeccion cartografica que exrprese sun unidades lineales,
-    ej: UTM14N o CCL
-
-    nombre_campo = tipo string, ingresar el nombre del campo ej: area_km2
-
+    :param path_vector: ruta de la capa vectorial, debe estar en una proyeccion
+                        cartografica que exrprese sun unidades lineales,
+                        ej: UTM14N o CCL
+    :param nombre_campo: ingresar el nombre del campo ej: area_km2
+    :type nombre_campo: string
     """
 
     if len(nombre_campo) > 10:
@@ -67,11 +66,12 @@ def area_ha(path_vector, nombre_campo):
     Esta funcion genera un campo nuevo y calcula el area de cada
     poligono en hectareas Parametros:
 
-        path_vector = ruta de la capa vectorial, debe estar en una
-                      proyeccion cartografica que exrprese sun unidades
-                      lineales, ej: UTM14N o CCL
-        nombre_campo = tipo string, ingresar el nombre del campo ej: area_ha
+    :param path_vector: ruta de la capa vectorial, debe estar en una
+                        proyeccion cartografica que exrprese sun unidades
+                       lineales, ej: UTM14N o CCL
+    :param nombre_campo: ingresar el nombre del campo ej: area_ha
 
+    :type nombre_campo: string
     """
 
     if len(nombre_campo) > 10:
@@ -95,9 +95,9 @@ def vcopia(path_vector, path_salida):
     """
     Crea una copia de la capa a partir de la ruta de la capa,
     la capa es creada con el mismo sistema de referencia que el origen.
-    Parametros:
-        path_vector= ruta de la capa original
-        path_salida= ruta de donde sera almacenada la capa
+
+    :param path_vector: ruta de la capa original
+    :param path_salida: ruta de donde sera almacenada la capa
     """
     vlayer = QgsVectorLayer(path_vector, "", "ogr")
     clonarv = QgsVectorFileWriter.writeAsVectorFormat(vlayer,
@@ -406,7 +406,7 @@ def wgs84_a_utm(path_gws84, path_utm, zona_norte):
     else:
         print ("error en el numero de zona")
 
-        
+
 def proy_a_wgs84(path_capa, path_wgs84):
     crs = QgsCoordinateReferenceSystem("EPSG:4326")
     vlayer = QgsVectorLayer(path_capa, "", "ogr")
