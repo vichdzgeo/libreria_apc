@@ -539,7 +539,7 @@ def campos_md(ruta_shape):
     nombre="md_"+nombre_archivo(ruta_shape)+".md"
     archivo = open(nuevo_path+nombre,"w")
 
-    archivo.write("Campo | Tipo | Descipción \n")
+    archivo.write("Campo | Tipo | Descripción \n")
     archivo.write("--- | --- | --- |\n")
 
     campos = [field.name()+" | "+field.typeName() + " | " for field in layer.fields()]
