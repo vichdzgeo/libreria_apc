@@ -513,13 +513,8 @@ def extension_capa(path_capa):
                   "este :", xmax,
                   "oeste :", xmin]
         print extend
-<<<<<<< HEAD
-        clean_var(vlayer_wgs84)
+        return ruta_temp
 
-        borrar_shape(ruta_temp)
-=======
-
->>>>>>> 49031ec6737f51ab747f69c06aa574db30db7c37
 
 def borrar_shape(ruta_shape):
     path_dir = "/".join(ruta_shape.split("/")[:-1]) + "/"
@@ -533,3 +528,22 @@ def clean_var(nombre_var):
     for var in gl:
         if var == nombre_var:
             del globals()[var]
+
+def extension_vector(ruta_capa):
+    ruta= extension_capa(ruta_capa)
+    borrar_shape(ruta)
+
+def campos_md(ruta_shape):
+    layer = QgsVectorLayer(ruta_shape,"","ogr")
+    nuevo_path = "/".join(ruta_shape.split("/")[:-1]) + "/"
+    nombre="md_"+nombre_archivo(ruta_shape)+".md"
+    archivo = open(nuevo_path+nombre,"w")
+
+    archivo.write("Campo | Tipo | Descipción \n")
+    archivo.write("--- | --- | --- |\n")
+
+    campos = [field.name()+" | "+field.typeName() + " | " for field in layer.fields()]
+
+    for campo in campos:
+        archivo.write(campo+"\n")
+    archivo.close()
