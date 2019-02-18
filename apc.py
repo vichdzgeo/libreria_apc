@@ -608,13 +608,29 @@ def metadatos(ruta_shape):
     archivo.write("Oeste = " + str(lista[1]["oeste"]) + "\n")
 
     archivo.write("## Lista de campos \n\n")
-    archivo.write("Campo | Tipo | Descripción |\n")
-    archivo.write("--- | --- | --- |\n")
-    campos = [field.name()+" | "+field.typeName() + " | " for field in vlayer.fields()]
-    for campo in campos:
-        archivo.write(campo+"\n")
+    archivo.write("Campo | Tipo | Descripción | Rango |\n")
+    archivo.write("--- | --- | --- | --- |\n")
+    #campos = [field.name()+" | "+field.typeName() + " | " for field in vlayer.fields()]
+
+    for field in vlayer.fields():
+    lista=[]
+        if not field.typeName()=="String" or field.typeName()=="Date":
+            for feature in layer.getFeatures():
+
+                if  not feature[field.name()] == NULL:
+                    lista.append(feature[field.name()])
+
+
+            #print field.name()," | ",field.typeName()," | "," | ",min(lista),"-",max(lista),"\n"
+            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+min(lista)+" - "+max(lista)+" | "+"\n")
+        else:
+            #print field.name()," | ",field.typeName()," | "," | "," ","\n"
+            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+" | "+"\n")
+
+
+
     archivo.close()
-    time.sleep(5)
+
 
     print ("metadatos creados")
     return ruta_temp
