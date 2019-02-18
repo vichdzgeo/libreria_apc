@@ -8,6 +8,7 @@ from PyQt4.QtCore import *
 from osgeo import gdal, ogr, osr
 import os
 import processing as pr
+import time
 
 
 # Area de Planeacion Colaborativa (APC)
@@ -486,21 +487,26 @@ def validacion_prj(lista_paths):
 
 def extension_capa(path_capa):
     vlayer = QgsVectorLayer(path_capa, "", "ogr")
+    lista=[]
     if vlayer.crs().authid() == "EPSG:4326":
+        lista.append(path_capa)
         ext = vlayer.extent()
         xmin = ext.xMinimum()
         xmax = ext.xMaximum()
         ymin = ext.yMinimum()
         ymax = ext.yMaximum()
-        extend = ["norte :", ymax,
-                  "sur :", ymin,
-                  "este :", xmax,
-                  "oeste :", xmin]
-        print extend
+        extend = {"norte": ymax,
+                  "sur": ymin,
+                  "este": xmax,
+                  "oeste": xmin}
+        lista.append(extend)
+
     else:
         nombre = nombre_archivo(path_capa)
+
         ruta_temp = "/".join(
             path_capa.split("/")[:-1]) + "/tp_wgs84_" + nombre + ".shp"
+        lista.append(ruta_temp)
         proy_a_wgs84(path_capa, ruta_temp)
         vlayer_wgs84 = QgsVectorLayer(ruta_temp, "", "ogr")
         ext = vlayer_wgs84.extent()
@@ -508,13 +514,13 @@ def extension_capa(path_capa):
         xmax = ext.xMaximum()
         ymin = ext.yMinimum()
         ymax = ext.yMaximum()
-        extend = ["norte :", ymax,
-                  "sur :", ymin,
-                  "este :", xmax,
-                  "oeste :", xmin]
-        print extend
-        return ruta_temp
+        extend = {"norte": ymax,
+                  "sur": ymin,
+                  "este": xmax,
+                  "oeste": xmin}
+        lista.append(extend)
 
+    return lista
 
 def borrar_shape(ruta_shape):
     path_dir = "/".join(ruta_shape.split("/")[:-1]) + "/"
@@ -547,3 +553,76 @@ def campos_md(ruta_shape):
     for campo in campos:
         archivo.write(campo+"\n")
     archivo.close()
+
+
+def metadatos(ruta_shape):
+    vlayer = QgsVectorLayer(ruta_shape,"","ogr")
+    nuevo_path = "/".join(ruta_shape.split("/")[:-1]) + "/"
+    nombre="md_"+nombre_archivo(ruta_shape)+".md"
+    archivo = open(nuevo_path + nombre,"w")
+    archivo.write("# Metadatos de la capa "+nombre_archivo(ruta_shape)+"\n")
+    archivo.write("## Ruta \n")
+    archivo.write(ruta_shape+"\n")
+    archivo.write("## Sistema de coordendas "+"\n")
+    archivo.write(vlayer.crs().authid() + "\n")
+    ruta_temp = ""
+
+    lista=[]
+    if vlayer.crs().authid() == "EPSG:4326":
+        lista.append(ruta_shape)
+        ext = vlayer.extent()
+        xmin = ext.xMinimum()
+        xmax = ext.xMaximum()
+        ymin = ext.yMinimum()
+        ymax = ext.yMaximum()
+        extend = {"norte": ymax,
+                  "sur": ymin,
+                  "este": xmax,
+                  "oeste": xmin}
+        lista.append(extend)
+
+    else:
+        nombre = nombre_archivo(ruta_shape)
+
+        ruta_temp = "/".join(
+            ruta_shape.split("/")[:-1]) + "/tp_wgs84_" + nombre + ".shp"
+        lista.append(ruta_temp)
+        proy_a_wgs84(ruta_shape, ruta_temp)
+        vlayer_wgs84 = QgsVectorLayer(ruta_temp, "", "ogr")
+        ext = vlayer_wgs84.extent()
+        xmin = ext.xMinimum()
+        xmax = ext.xMaximum()
+        ymin = ext.yMinimum()
+        ymax = ext.yMaximum()
+        extend = {"norte": ymax,
+                  "sur": ymin,
+                  "este": xmax,
+                  "oeste": xmin}
+        lista.append(extend)
+    archivo.write("## Total de elementos \n")
+    archivo.write(vlayer.featureCount()+"\n")
+    archivo.write("## Extensión geográfica \n")
+    archivo.write("Norte = " + str(lista[1]["norte"]) + "\n")
+    archivo.write("Sur = " + str(lista[1]["sur"]) + "\n")
+    archivo.write("Este = " + str(lista[1]["este"]) + "\n")
+    archivo.write("Oeste = " + str(lista[1]["oeste"]) + "\n")
+
+    archivo.write("## Lista de campos \n\n")
+    archivo.write("Campo | Tipo | Descripción |\n")
+    archivo.write("--- | --- | --- |\n")
+    campos = [field.name()+" | "+field.typeName() + " | " for field in vlayer.fields()]
+    for campo in campos:
+        archivo.write(campo+"\n")
+    archivo.close()
+    time.sleep(5)
+
+    print ("metadatos creados")
+    return ruta_temp
+
+def crear_metadatos(ruta_shape):
+    capa = metadatos(ruta_shape)
+    if capa == "":
+        print ("se ha creado el archivo md en el direcctorio")
+    else:
+        borrar_shape(capa)
+        print ("se ha creado el archivo md en el direcctorio")
