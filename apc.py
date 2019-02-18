@@ -626,3 +626,14 @@ def crear_metadatos(ruta_shape):
     else:
         borrar_shape(capa)
         print ("se ha creado el archivo md en el direcctorio")
+
+def campos_minusculas(path_shape):
+    layer = QgsVectorLayer(path_shape,"","ogr")
+    campos = [field.name() for field in layer.fields()]
+    for campo in campos:
+    for field in layer.pendingFields():
+        if campo == field.name():
+           with edit(layer):
+               idx = layer.fieldNameIndex(field.name())
+               layer.renameAttribute(idx,field.name().lower())
+    print ("Proceso terminado")
