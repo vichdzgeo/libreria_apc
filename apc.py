@@ -611,8 +611,8 @@ def metadatos(ruta_shape):
     campos = [field.name() for field in vlayer.fields()]
     archivo.write("### Total de campos\n")
     archivo.write(str(len(campos))+"\n\n")
-    archivo.write("Campo | Tipo | Descripción | Rango |\n")
-    archivo.write("--- | --- | --- | --- |\n")
+    archivo.write("Campo | Tipo | Descripción | Rango | Unidades\n")
+    archivo.write("--- | --- | --- | --- | --- | \n")
 
 
     for field in vlayer.fields():
@@ -625,10 +625,10 @@ def metadatos(ruta_shape):
 
 
             #print field.name()," | ",field.typeName()," | "," | ",min(lista),"-",max(lista),"\n"
-            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+str(min(lista))+" - "+str(max(lista))+"\n")
+            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+str(min(lista))+" - "+str(max(lista))+" | "+"\n")
         else:
             #print field.name()," | ",field.typeName()," | "," | "," ","\n"
-            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+" "+"\n")
+            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+" |"+"\n")
 
 
 
