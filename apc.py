@@ -600,7 +600,7 @@ def metadatos(ruta_shape):
                   "oeste": xmin}
         lista.append(extend)
     archivo.write("## Total de elementos \n")
-    archivo.write(vlayer.featureCount()+"\n")
+    archivo.write(str(vlayer.featureCount())+"\n")
     archivo.write("## Extensión geográfica \n")
     archivo.write("Norte = " + str(lista[1]["norte"]) + "\n")
     archivo.write("Sur = " + str(lista[1]["sur"]) + "\n")
@@ -608,24 +608,27 @@ def metadatos(ruta_shape):
     archivo.write("Oeste = " + str(lista[1]["oeste"]) + "\n")
 
     archivo.write("## Lista de campos \n\n")
+    campos = [field.name() for field in vlayer.fields()]
+    archivo.write("### Total de campos\n")
+    archivo.write(str(len(campos))+"\n\n")
     archivo.write("Campo | Tipo | Descripción | Rango |\n")
     archivo.write("--- | --- | --- | --- |\n")
-    #campos = [field.name()+" | "+field.typeName() + " | " for field in vlayer.fields()]
+
 
     for field in vlayer.fields():
-    lista=[]
+        lista=[]
         if not field.typeName()=="String" or field.typeName()=="Date":
-            for feature in layer.getFeatures():
+            for feature in vlayer.getFeatures():
 
                 if  not feature[field.name()] == NULL:
                     lista.append(feature[field.name()])
 
 
             #print field.name()," | ",field.typeName()," | "," | ",min(lista),"-",max(lista),"\n"
-            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+min(lista)+" - "+max(lista)+" | "+"\n")
+            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+str(min(lista))+" - "+str(max(lista))+"\n")
         else:
             #print field.name()," | ",field.typeName()," | "," | "," ","\n"
-            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+" | "+"\n")
+            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+" "+"\n")
 
 
 
@@ -647,9 +650,9 @@ def campos_minusculas(path_shape):
     layer = QgsVectorLayer(path_shape,"","ogr")
     campos = [field.name() for field in layer.fields()]
     for campo in campos:
-    for field in layer.pendingFields():
-        if campo == field.name():
-           with edit(layer):
-               idx = layer.fieldNameIndex(field.name())
-               layer.renameAttribute(idx,field.name().lower())
+        for field in layer.pendingFields():
+            if campo == field.name():
+                with edit(layer):
+                    idx = layer.fieldNameIndex(field.name())
+                    layer.renameAttribute(idx,field.name().lower())
     print ("Proceso terminado")
