@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import qgis
-from qgis.core import *
-from qgis.analysis import *
-from os.path import join
-from PyQt4.QtCore import *
-from osgeo import gdal, ogr, osr
+# import qgis
+# from qgis.core import *
+# from qgis.analysis import *
+# from os.path import join
+# from PyQt4.QtCore import *
+# from osgeo import gdal, ogr, osr
 import os
-import processing as pr
+# import processing as pr
 import time
 
 
@@ -26,10 +26,19 @@ def v_interseccion(vector_a, vector_b, path_s):
     v_interseccion(vector_a,vector_b,path_s)
     Esta funcion calcula la interseccion geometrica de las capas poligonales
     superpuestas es decir, vector_a y vector_b
-    Parametros:
-        vector_a =
-        vector_b =
+
+    :param vector_a: Ruta o path de la capa A
+    :type vector_a: String
+
+    :param vector_b: Ruta o path de la capa B
+    :type vector_b: String
+
+    :param path_s: Ruta o path de salida de la capa
+    :type path_s: String
+
     '''
+    vector_a =  QgsVectorlayer(vector_a, "", "ogr")
+    vector_b =  QgsVectorlayer(vector_b, "", "ogr")
     pr.runalg("saga:intersect", vector_a, vector_b, 0, path_s)
 
 
