@@ -3,20 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Bienvenido a la documentación de la  Libreria Python-Qgis2.18 LANCIS-APC!
+Introducción
 ===============================================================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
-Esta es la libreria de python y qgis 2.18
+   :caption: Contenido:
 
-apc
-----------
+   instalacion
+   libreria_apc
 
-.. automodule:: apc
-    :members:
-    :private-members:
 
 
 Indices and tables
