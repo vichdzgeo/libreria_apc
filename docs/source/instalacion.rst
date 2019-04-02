@@ -14,7 +14,7 @@ presiona enter y escribe el siguiente comando
   print os.getcwd()
 
 Se muestra la ruta donde tendrá que ser copiado el archivo ´apc.py´
-el cual es la biblioteca de funciones de python y qgis :
+el cual es la biblioteca de funciones de python y qgis  :
 
 .. image:: /imagenes/ruta.jpg
    :alt: alternate text
