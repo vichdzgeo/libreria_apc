@@ -10,7 +10,7 @@ import os
 # import processing as pr
 import time
 
-
+'''
 # Area de Planeacion Colaborativa (APC)
 # Libreria para el procesamiento de datos geograficos en Python
 # ver. 2.7) y Qgis (2.18).
@@ -19,7 +19,7 @@ import time
 
 # Objetivo: Facilitar la creacion de scripts en los procesos de información
 # geográfica
-
+'''
 
 def v_interseccion(vector_a, vector_b, path_s):
     '''
