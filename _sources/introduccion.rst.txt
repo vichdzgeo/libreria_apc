@@ -1,0 +1,9 @@
+Instalación
+=================
+Para instalar la libreria en python y qgis seguir los siguientes pasos:
+
+
+Para insertar imágenes :
+
+.. image:: /imagenes/lancis.png
+   :alt: alternate text
