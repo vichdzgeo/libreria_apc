@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="es" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="es" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Estilo de código en python &mdash; documentación de Libreria Python-Qgis2.18 LANCIS-APC - 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Sitios prioritarios marinos de Yucatán." href="procesamiento.html" />
+    <link rel="prev" title="Biblioteca Python-Qgis" href="libreria_apc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Libreria Python-Qgis2.18 LANCIS-APC
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contenido:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="instalacion.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libreria_apc.html">Biblioteca Python-Qgis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Estilo de código en python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#identacion">Identación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#longitud-de-lineas">Longitud de líneas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#importaciones">Importaciones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#espacios-en-expresiones-y-sentencias">Espacios en expresiones y sentencias</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comentarios">Comentarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#docstrings">Docstrings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="procesamiento.html">Sitios prioritarios marinos de Yucatán.</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Libreria Python-Qgis2.18 LANCIS-APC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Estilo de código en python</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/estilo.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="estilo-de-codigo-en-python">
+<h1>Estilo de código en python<a class="headerlink" href="#estilo-de-codigo-en-python" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>Dos buenas razones para romper una regla en particular:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Cuando el aplicar la regla, haga el código menos legible o confuso, incluso para alguien que está acostumbrado a leer códigos bajo este estilo.</li>
+<li>Para ser consistente en código que también la rompe (tal vez por razones históricas) - aunque esto podría ser una oportunidad para limpiar el «desastre» de otra persona.</li>
+</ul>
+</div></blockquote>
+<div class="section" id="identacion">
+<h2>Identación<a class="headerlink" href="#identacion" title="Enlazar permanentemente con este título">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>Usar espacios en lugar de tabulaciones</li>
+<li>Se recomienda alinear verticalmente con el carácter que se ha utilizado (paréntesis, llaves, corchetes)</li>
+</ul>
+</div></blockquote>
+<p>Si</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Alineado con el paréntesis que abre la función</span>
+<span class="n">foo</span> <span class="o">=</span> <span class="n">nombre_variable</span><span class="p">(</span><span class="n">var_uno</span><span class="p">,</span>
+                     <span class="n">var_dos</span><span class="p">,</span>
+                     <span class="n">var_tres</span><span class="p">,</span>
+                     <span class="n">var_cuatro</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>No</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Argumentos en la primera línea cuando no se esta haciendo uso de la alineacion vertical</span>
+<span class="n">foo</span> <span class="o">=</span> <span class="n">nombre_variable</span><span class="p">(</span><span class="n">var_uno</span><span class="p">,</span> <span class="n">var_dos</span><span class="p">,</span>
+    <span class="n">var_tres</span><span class="p">,</span><span class="n">var_cuatro</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="longitud-de-lineas">
+<h2>Longitud de líneas<a class="headerlink" href="#longitud-de-lineas" title="Enlazar permanentemente con este título">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>Limita todas las líneas de código a un máximo de 79 caracteres.</li>
+<li>En el caso de largos bloques de texto («docstrings» o comentarios), es recomendado limitarlo a 72 caracteres</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="importaciones">
+<h2>Importaciones<a class="headerlink" href="#importaciones" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Las importaciones siempre se colocan al comienzo del archivo,
+simplemente luego de cualquier comentario o documentación del módulo,
+y antes de las variables globales y constantes
+Las importaciones deben estar en líneas separadas, por ejemplo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Sí</span><span class="p">:</span> <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">No</span><span class="p">:</span> <span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+</pre></div>
+</div>
+<p>Sin embargo es correcto decir:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="espacios-en-expresiones-y-sentencias">
+<h2>Espacios en expresiones y sentencias<a class="headerlink" href="#espacios-en-expresiones-y-sentencias" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Evitar usar espacios en blanco extraños en las siguientes situaciones:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Inmediatamente dentro del paréntesis, corchetes o llaves:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Sí</span><span class="p">:</span> <span class="n">spam</span><span class="p">(</span><span class="n">ham</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">{</span><span class="n">eggs</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="n">No</span><span class="p">:</span> <span class="n">spam</span> <span class="n">ham</span><span class="p">[</span> <span class="mi">1</span> <span class="p">],</span> <span class="p">{</span> <span class="n">eggs</span><span class="p">:</span> <span class="mi">2</span> <span class="p">}</span> <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Antes de una coma, un punto y coma o dos puntos:</p>
+</li>
+<li><p class="first">Antes del paréntesis o corchete</p>
+</li>
+<li><p class="first">Más de un espacio alrededor de un operador de asignación.</p>
+</li>
+</ul>
+<p>Si.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">variable_larga</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>No</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span>              <span class="o">=</span> <span class="mi">1</span>
+<span class="n">y</span>              <span class="o">=</span> <span class="mi">2</span>
+<span class="n">variable_larga</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ul class="simple">
+<li>No utilizar espacios alrededor del = (igual) cuando es utilizado para indicar un argumento en una función.</li>
+</ul>
+<p>Sí</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">complex</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">img</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">magin</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">real</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span> <span class="n">imag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>No</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">complex</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">magic</span><span class="p">(</span><span class="n">r</span> <span class="o">=</span> <span class="n">real</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="n">imag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="comentarios">
+<h2>Comentarios<a class="headerlink" href="#comentarios" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Siempre tener en prioridad mantener los comentarios al día cuando el
+código cambie</p>
+</div>
+<p>Comentarios que contradigan el código es peor que no colocar comentarios.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Los comentarios deben ser oraciones completas.</li>
+<li>La primera palabra debe comenzar con mayúscula</li>
+<li>Si un comentario es corto, el punto final puede omitirse</li>
+<li>Usar dos espacios luego de una oración que termine con un punto.</li>
+<li>Usar comentarios en línea escasamente y deberan ser separados por al menos dos espacios de la sentencia
+* Deben empezar con un # (numeral) seguido de un espacio</li>
+</ul>
+</div></blockquote>
+<div class="section" id="docstrings">
+<h3>Docstrings<a class="headerlink" href="#docstrings" title="Enlazar permanentemente con este título">¶</a></h3>
+<p>Tambien llamadas cadenas de documentación.</p>
+<p>Escribir «docstrings» para todos los módulos, funciones, clases y métodos
+públicos.</p>
+<p>Ejemplo</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">v_interseccion</span><span class="p">(</span><span class="n">vector_a</span><span class="p">,</span> <span class="n">vector_b</span><span class="p">,</span> <span class="n">path_s</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Esta funcion calcula la interseccion geometrica de las capas poligonales</span>
+<span class="sd">  superpuestas es decir, vector_a y vector_b</span>
+
+<span class="sd">  :param vector_a: Ruta o path de la capa A</span>
+<span class="sd">  :type vector_a: String</span>
+
+<span class="sd">  :param vector_b: Ruta o path de la capa B</span>
+<span class="sd">  :type vector_b: String</span>
+
+<span class="sd">  :param path_s: Ruta o path de salida de la capa</span>
+<span class="sd">  :type path_s: String</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="n">vector_a</span> <span class="o">=</span>  <span class="n">QgsVectorlayer</span><span class="p">(</span><span class="n">vector_a</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;ogr&quot;</span><span class="p">)</span>
+  <span class="n">vector_b</span> <span class="o">=</span>  <span class="n">QgsVectorlayer</span><span class="p">(</span><span class="n">vector_b</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;ogr&quot;</span><span class="p">)</span>
+  <span class="n">pr</span><span class="o">.</span><span class="n">runalg</span><span class="p">(</span><span class="s2">&quot;saga:intersect&quot;</span><span class="p">,</span> <span class="n">vector_a</span><span class="p">,</span> <span class="n">vector_b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">path_s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="procesamiento.html" class="btn btn-neutral float-right" title="Sitios prioritarios marinos de Yucatán." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="libreria_apc.html" class="btn btn-neutral float-left" title="Biblioteca Python-Qgis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Víctor Hernández
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

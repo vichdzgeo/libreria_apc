@@ -1,0 +1,294 @@
+---
+title: "Exploración Datos"
+author: 
+- Alfonso Medina
+- Josué Mendoza
+date: "Diciembre 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
+```
+
+```{r echo=FALSE}
+pacman::p_load(tidyverse,
+               reshape2,
+               foreign,
+               plotly,
+               scales,
+               xtable,
+               kableExtra)
+```
+
+Se calculó media y desviación estandar de cada variabele por año así como media y desviación general. 
+
+De igual forma, se generaron histogramas exploratorios para cada viariable y diagramas de dispersión de cada variable con respecto a la frecuencia de encharcamientos (`f_en`). Para la frecuencia de encharcamientos (`f_en`), la precipitación por volumen (`f_prec_v`), la precipitación por tirante (`f_prec_t`) y la escorrentía (`f_esc`) los gráficos se generaron por año.
+
+**Nota:** Para las variables `f_en`, `f_prec_v`, `f_prec_t` los años comprendidos son del 2007 al 2017, mientras que para la variable `f_esc` son del 2007 al 2013.
+
+```{r}
+data <- read_csv("C:/Dropbox (LANCIS)/SIG/desarrollo/sig_megadapt/procesamiento/modelo_ench_inund/frecuentista/bd_ench_inunda_aj.csv") %>%
+  select(-"X1", -"cvgeo.x", -"ELEVACION", -"cvgeo.y", -"salen", -"Join_Count", -"TARGET_FID", -"FID_1", -"cvgeo") %>% 
+  mutate(ageb_id = as.factor(ageb_id),
+    anio = as.factor(paste0(20, anio)))
+```
+
+# Estadística descriptiva
+
+## Medias por año
+
+```{r}
+g_mean <- data %>%
+  summarise_if(is.numeric, mean, na.rm = T) %>% 
+  unname()
+
+data %>%
+  select(-"ageb_id") %>% 
+  group_by(anio) %>% 
+  summarise_if(is.numeric, mean, na.rm = T) %>%
+  rbind(c("", g_mean)) %>% 
+  kable(escape = F, align = "c") %>% 
+  kable_styling("striped", full_width = F)
+```
+
+## Desviación estandar por año 
+
+```{r}
+g_sd <- data %>%
+  summarise_if(is.numeric, funs(sd), na.rm = T) %>% 
+  unname()
+
+data %>%
+  select(-"ageb_id") %>% 
+  group_by(anio) %>% 
+  summarise_if(is.numeric, funs(sd), na.rm = T) %>%
+  rbind(c("Tot", g_sd)) %>%
+  kable(escape = F, align = "c") %>% 
+  kable_styling("striped", full_width = F)
+```
+
+# Histogramas 
+
+## Frecuencia de encharcamientos por año
+
+```{r}
+ggplot(data, aes(x = f_en, label = anio)) + 
+  geom_histogram(col = "black", fill = "gray") +
+  labs(title = "Histogramas Exploratorios", subtitle = "Encharcamientos", y = "Frecuencias", x = "") +
+  facet_wrap(~anio, nrow = 3, scales = "free")
+```
+
+## Precipitación (volumen)
+
+```{r}
+ggplot(data, aes(x = f_prec_v, label = anio)) + 
+  geom_histogram(col = "black", fill = "gray") +
+  labs(title = "Histogramas Exploratorios", subtitle = "Precipitación (volumen)", y = "Frecuencias", x = "") +
+  facet_wrap(~anio, nrow = 3)
+```
+
+## Precipitación (tirante)
+
+```{r}
+ggplot(data, aes(x = f_prec_t, label = anio)) + 
+  geom_histogram(col = "black", fill = "gray") +
+  labs(title = "Histogramas Exploratorios", subtitle = "Precipitación (tirante)", y = "Frecuencias", x = "") +
+  facet_wrap(~anio, nrow = 3)
+```
+
+## Escorrentia
+
+```{r}
+data %>% 
+  filter(!is.na(f_esc)) %>%
+  ggplot(aes(x = f_esc, label = anio)) +
+  geom_histogram(col = "black", fill = "gray") +
+  labs(title = "Histogramas Exploratorios", subtitle = "Escorrentias", y = "Frecuencias", x = "") +
+  facet_wrap(~anio, nrow = 3)
+```
+
+## n Tramos
+
+```{r}
+ggplot(data, aes(x = n_tramos)) + 
+  geom_histogram(col = "black", fill = "gray") +
+  labs(title = "Histogramas Exploratorios", subtitle = "Centralidad del drenaje", y = "Frecuencias", x = "")
+```
+
+## Desalojo
+
+```{r}
+ggplot(data, aes(x = q100)) + 
+  geom_histogram(col = "black", fill = "gray") +
+  labs(title = "Histogramas Exploratorios", subtitle = "Capacidad de Desalojo", y = "Frecuencias", x = "")
+```
+
+## Bombas
+
+```{r}
+ggplot(data, aes(x = bombeo_tot)) + 
+  geom_histogram(col = "black", fill = "gray") +
+  labs(title = "Histogramas Exploratorios", subtitle = "Bombas", y = "Frecuencias", x = "")
+```
+
+## Rejillas
+
+```{r}
+ggplot(data, aes(x = rejillas)) + 
+  geom_histogram(col = "black", fill = "gray") +
+  labs(title = "Histogramas Exploratorios", subtitle = "Rejillas", y = "Frecuencias", x = "")
+```
+
+
+# Diagramas de dispersión 
+
+## Encharcamientos vs Precipitación (volumen)
+```{r fig.width = 8, fig.height = 6}
+plot_ly(data, x = ~f_prec_v, y = ~f_en, color = ~anio, type = "scatter", colors = c(hue_pal()(11)),
+                hoverinfo = "text",
+        text = ~paste("f_en: ", f_en, 
+                      "</br> f_prec_v: ", f_prec_v, 
+                      "<br> ageb_id: ", ageb_id,
+                      "<br> año: ", anio)) %>% 
+  layout(title = "Encharcamientos vs Precipitación (volumen)",
+    xaxis = list(title = "Precipitación (volumen)"), 
+    yaxis = list(title = "Encharcamientos"))
+```
+
+```{r fig.width = 10, fig.height = 8}
+ggplot(data, aes(x = f_prec_v, y = f_en, color = anio, label = ageb_id)) + 
+  geom_point(show.legend = FALSE) + 
+  labs(title = "Encharcamientos vs Precipitación (volumen)", subtitle = "Por año" , y = "Encharcamientos", x = "Precipitación (volumen)") +
+  facet_wrap(~anio, nrow = 3, scales = "free")
+```
+
+## Encharcamientos vs Precipitación (tirante)
+
+```{r fig.width = 8, fig.height = 6}
+plot_ly(data, x = ~f_prec_t, y = ~f_en, color = ~anio, type = "scatter", colors = c(hue_pal()(11)),
+        hoverinfo = "text",
+        text = ~paste("f_en: ", f_en, 
+                      "</br> f_prec_t: ", f_prec_t, 
+                      "<br> ageb_id: ", ageb_id,
+                      "<br> año: ", anio)) %>% 
+  layout(title = "Encharcamientos vs Precipitación (tirante)",
+    xaxis = list(title = "Precipitación (tirante)"), 
+    yaxis = list(title = "Encharcamientos"))
+```
+
+```{r fig.width = 10, fig.height = 8}
+ggplot(data, aes(x = f_prec_t, y = f_en, color = anio, label = anio)) + 
+  geom_point(show.legend = FALSE) + 
+  labs(title = "Encharcamientos vs Precipitación (tirante)", subtitle = "Por año", y = "", x = "") +
+  facet_wrap(~anio, nrow = 3, scales = "free")
+```
+
+## Encharcamientos vs Escorrentia
+
+```{r fig.width = 8, fig.height = 6}
+data %>% 
+  filter(!is.na(f_esc)) %>%
+  plot_ly(x = ~f_esc, y = ~f_en, color = ~anio, type = "scatter", colors = c(hue_pal()(7)),
+        hoverinfo = "text",
+        text = ~paste("f_en: ", f_en, 
+                      "</br> f_esc: ", f_esc, 
+                      "<br> ageb_id: ", ageb_id,
+                      "<br> año: ", anio)) %>% 
+  layout(title = "Encharcamientos vs Escorrentia",
+    xaxis = list(title = "Escorrentia"), 
+    yaxis = list(title = "Encharcamientos"))
+```
+
+```{r fig.width = 10, fig.height = 8}
+data %>% 
+  filter(!is.na(f_esc)) %>%
+  ggplot(aes(x = f_esc, y = f_en, color = anio, label = ageb_id)) + 
+  geom_point(show.legend = FALSE) + 
+  labs(title = "Encharcamientos vs Escorrentia", subtitle = "Por año", y = "", x = "") +
+  facet_wrap(~anio, nrow = 3, scales = "free")
+```
+
+## Encharcamientos vs n Tramos
+
+```{r fig.width = 8, fig.height = 6}
+plot_ly(data, x = ~n_tramos, y = ~f_en, color = ~anio, type = "scatter", colors = c(hue_pal()(11)),
+        hoverinfo = "text",
+        text = ~paste("f_en: ", f_en, 
+                      "</br> n_tramos: ", n_tramos, 
+                      "<br> ageb_id: ", ageb_id,
+                      "<br> año: ", anio)) %>% 
+  layout(title = "Encharcamientos vs n Tramos",
+    xaxis = list(title = "n Tramos"), 
+    yaxis = list(title = "Encharcamientos"))
+```
+
+```{r fig.width = 10, fig.height = 8}
+ggplot(data, aes(x = n_tramos, y = f_en, color = anio, label = ageb_id)) + 
+  geom_point(show.legend = FALSE) + 
+  labs(title = "Encharcamientos vs n_tramos", subtitle = "Por año", y = "", x = "") +
+  facet_wrap(~anio, nrow = 3, scales = "free")
+```
+
+## Encharcamientos vs Desalojo
+
+```{r fig.width = 8, fig.height = 6}
+plot_ly(data, x = ~q100, y = ~f_en, color = ~anio, type = "scatter", colors = c(hue_pal()(11)),
+        hoverinfo = "text",
+        text = ~paste("f_en: ", f_en, 
+                      "</br> q100: ", q100, 
+                      "<br> ageb_id: ", ageb_id,
+                      "<br> año: ", anio)) %>% 
+  layout(title = "Encharcamientos vs Desalojo",
+    xaxis = list(title = "Desalojo"), 
+    yaxis = list(title = "Encharcamientos"))
+```
+
+```{r fig.width = 10, fig.height = 8}
+ggplot(data, aes(x = q100, y = f_en, color = anio, label = ageb_id)) + 
+  geom_point(show.legend = FALSE) + 
+  labs(title = "Encharcamientos vs Desalojo", subtitle = "Por año", y = "Encharcamientos", x = "Desalojo") +
+  facet_wrap(~anio, nrow = 3, scales = "free")
+```
+
+## Encharcamientos vs Bombas
+
+```{r fig.width = 8, fig.height = 6}
+plot_ly(data, x = ~bombeo_tot, y = ~f_en, color = ~anio, type = "scatter", colors = c(hue_pal()(11)),
+        hoverinfo = "text",
+        text = ~paste("f_en: ", f_en, 
+                      "</br> bombas: ", bombeo_tot, 
+                      "<br> ageb_id: ", ageb_id,
+                      "<br> año: ", anio)) %>% 
+  layout(title = "Encharcamientos vs Bombas",
+    xaxis = list(title = "Bombas"), 
+    yaxis = list(title = "Encharcamientos"))
+```
+
+```{r fig.width = 10, fig.height = 8}
+ggplot(data, aes(x = bombeo_tot, y = f_en, color = anio, label = ageb_id)) + 
+  geom_point(show.legend = FALSE) + 
+  labs(title = "Encharcamientos vs Bombas", subtitle = "Por año", y = "Encharcamientos", x = "Bombas") +
+  facet_wrap(~anio, nrow = 3, scales = "free")
+```
+
+## Encharcamientos vs Rejillas
+
+```{r fig.width = 8, fig.height = 6}
+plot_ly(data, x = ~rejillas, y = ~f_en, color = ~anio, type = "scatter", colors = c(hue_pal()(11)),
+        hoverinfo = "text",
+        text = ~paste("f_en: ", f_en, 
+                      "</br> rejillas: ", rejillas, 
+                      "<br> ageb_id: ", ageb_id,
+                      "<br> año: ", anio)) %>% 
+  layout(title = "Encharcamientos vs Rejillas",
+    xaxis = list(title = "Rejillas"), 
+    yaxis = list(title = "Encharcamientos"))
+```
+
+```{r fig.width = 10, fig.height = 8}
+ggplot(data, aes(x = rejillas, y = f_en, color = anio, label = ageb_id)) + 
+  geom_point(show.legend = FALSE) + 
+  labs(title = "Encharcamientos vs Rejillas", subtitle = "Por año", y = "Encharcamientos", x = "Rejillas") +
+  facet_wrap(~anio, nrow = 3, scales = "free")
+```

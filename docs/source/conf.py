@@ -49,6 +49,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.autosummary',
+    'recommonmark',
 ]
 autosummary_generate = True
 html_sidebars = { '**': ['globaltoc.html', 'relations.html',
@@ -60,7 +61,10 @@ templates_path = ['_templates']
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = {
+                '.rst': 'restructuredtext',
+                '.md': 'markdown',
+                }
 
 # The master toctree document.
 master_doc = 'index'

@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="es" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="es" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>title: «Historical Analysis of Severe Weather Events in U.S.» author: «Fidel Serrano Candela» date: «3/4/2019» output: html_document &mdash; documentación de Libreria Python-Qgis2.18 LANCIS-APC - 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="prev" title="Sitios prioritarios marinos de Yucatán." href="procesamiento.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Libreria Python-Qgis2.18 LANCIS-APC
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contenido:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="instalacion.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libreria_apc.html">Biblioteca Python-Qgis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="estilo.html">Estilo de código en python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="procesamiento.html">Sitios prioritarios marinos de Yucatán.</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">title: «Historical Analysis of Severe Weather Events in U.S.»
+author: «Fidel Serrano Candela»
+date: «3/4/2019»
+output: html_document</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#data-processing">Data Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#analysis">Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Libreria Python-Qgis2.18 LANCIS-APC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>title: «Historical Analysis of Severe Weather Events in U.S.»
+author: «Fidel Serrano Candela»
+date: «3/4/2019»
+output: html_document</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/ejemplo.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <hr class="docutils" />
+<div class="section" id="title-historical-analysis-of-severe-weather-events-in-u-s-author-fidel-serrano-candela-date-3-4-2019-output-html-document">
+<h1>title: «Historical Analysis of Severe Weather Events in U.S.»
+author: «Fidel Serrano Candela»
+date: «3/4/2019»
+output: html_document<a class="headerlink" href="#title-historical-analysis-of-severe-weather-events-in-u-s-author-fidel-serrano-candela-date-3-4-2019-output-html-document" title="Enlazar permanentemente con este título">¶</a></h1>
+</div>
+<div class="section" id="synopsis">
+<h1>Synopsis<a class="headerlink" href="#synopsis" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>This document describes a historical analysis of the economic and health costs of severe weather events in US from 1950 to 2011. The analysis includes a quantification of total damages for each type of event, the mean damage per type of event, and the spatial distribution per type of event. To be able to do this analysis it was necessary to clean messy EVTYPE column from 985 event types, to comply with valid types in the National Weather Service Storm Data Documentation provided for this project.</p>
+</div>
+<div class="section" id="data-processing">
+<h1>Data Processing<a class="headerlink" href="#data-processing" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>Data for the analysis comes from the U.S. National Oceanic and Atmospheric Administration”s (NOAA) storm database. The database contains data from 1950 to 2011, one row per event with 37 columns containing information about the event.</p>
+<div class="highlight-{r setup, message=FALSE, warning=FALSE} notranslate"><div class="highlight"><pre><span></span>knitr::opts_chunk$set(echo = TRUE)
+# install.packages(&quot;dplyr&quot;)
+# install.packages(&quot;LSAfun&quot;)
+# install.packages(&quot;usmap&quot;)
+# install.packages(&quot;ggplot2&quot;)
+# install.packages(&quot;gridExtra&quot;)
+# install.packages(&quot;stringr&quot;)
+# install.packages(&quot;RecordLinkage&quot;)
+# install.packages(&quot;tidyr&quot;)
+library(dplyr)
+library(LSAfun)
+library(usmap)
+library(ggplot2)
+library(gridExtra)
+library(stringr)
+library(RecordLinkage)
+library(tidyr)
+</pre></div>
+</div>
+<p>To load the data directly from compressed file, and find out how many levels the column EVTYPE has:</p>
+<div class="highlight-{r readData, cache=TRUE, message=FALSE, warning=FALSE} notranslate"><div class="highlight"><pre><span></span>
+
+repdata_data &lt;- read.csv(&quot;repdata_data_StormData.csv.bz2&quot;)
+print(paste(&quot;EVTYPE has : &quot;,length(levels(repdata_data$EVTYPE)), &quot;unique values&quot;))
+
+</pre></div>
+</div>
+<p>As we can see EVTYPE is a factor with 985 levels, which means that the database has 985 types of event, but in the National Weather Service Storm Data Documentation there are only 48 valid types.</p>
+<div class="highlight-{r valid_types, cache=TRUE, message=FALSE, warning=FALSE} notranslate"><div class="highlight"><pre><span></span>valid_types &lt;- c(&quot;Astronomical Low Tide&quot;, &quot;Avalanche&quot;, &quot;Blizzard&quot;, &quot;Coastal Flood&quot;, &quot;Cold/Wind Chill&quot;, &quot;Debris Flow&quot;, &quot;Dense Fog&quot;, &quot;Dense Smoke&quot;, &quot;Drought&quot;, &quot;Dust Devil&quot;, &quot;Dust Storm&quot;, &quot;Excessive Heat&quot;, &quot;Extreme Cold/Wind Chill&quot;, &quot;Flash Flood&quot;, &quot;Flood&quot;, &quot;Frost/Freeze&quot;, &quot;Funnel Cloud&quot;, &quot;Freezing Fog&quot;, &quot;Hail&quot;, &quot;Heat&quot;, &quot;Heavy Rain&quot;, &quot;Heavy Snow&quot;, &quot;High Surf&quot;, &quot;High Wind&quot;, &quot;Hurricane (Typhoon)&quot;, &quot;Ice Storm&quot;, &quot;Lake-Effect Snow&quot;, &quot;Lakeshore Flood&quot;, &quot;Lightning&quot;, &quot;Marine Hail&quot;, &quot;Marine High Wind&quot;, &quot;Marine Strong Wind&quot;, &quot;Marine Thunderstorm Wind&quot;, &quot;Rip Current&quot;, &quot;Seiche&quot;, &quot;Sleet&quot;, &quot;Storm Surge/Tide&quot;, &quot;Strong Wind&quot;, &quot;Thunderstorm Wind&quot;, &quot;Tornado&quot;, &quot;Tropical Depression&quot;, &quot;Tropical Storm&quot;, &quot;Tsunami&quot;, &quot;Volcanic Ash&quot;, &quot;Waterspout&quot;, &quot;Wildfire&quot;, &quot;Winter Storm&quot;,&quot;Winter Weather&quot;)
+print(paste(&quot;There are&quot;,length(valid_types), &quot;valid types&quot;))
+</pre></div>
+</div>
+<p>This might be due to little differences in the EVTYPE column, for example there are «THUNDERSTORM WIND» and «THUNDERSTORM WINDS» or «AVALANCHE» and «AVALANCE». We will try to fix this with a function that assigns the closest of the 48 valid types to each of the 985 EVTYPE levels. To achieve that we will use semantic analysis and the Levenshtein distance. For the Levenshtein distance we will use the function levenshteinSim() from RecordLinkage library, this function receives two strings and returns a similitude score between 0 and 1, 1 meaning perfect match. And for semantic analysis we will use package LSAfun with EN_100k_lsa space gotten from http://www.lingexp.uni-tuebingen.de/z2/LSAspaces/ in particular costring function that computes the similitude of two sentences and gives a score between 0 and 1 based on the meaning of the sentence and not in the exact words. So we will construct the functions levenshtein_type() and lsafun_type() that receive an EVTYPE and return the closest valid type by the respective metric.</p>
+<div class="highlight-{r what_type, cache=TRUE, message=FALSE, warning=FALSE} notranslate"><div class="highlight"><pre><span></span>download.file(&quot;http://www.lingexp.uni-tuebingen.de/z2/LSAspaces/EN_100k_lsa.rda&quot;, &quot;EN_100k_lsa.rda&quot;)
+load(&quot;EN_100k_lsa.rda&quot;)
+fix_text &lt;- function(text){
+  text &lt;- str_replace_all(text, &quot;[[:punct:]]&quot;, &quot; &quot;)
+  text &lt;- trimws(text)
+  text &lt;- tolower(text)
+  text &lt;- gsub(&quot;s\\b&quot;, &quot;&quot;, text)
+  text &lt;- gsub(&quot;s\\b&quot;, &quot;&quot;, text)
+  text
+}
+
+lsafun_type &lt;- function(ev_type,types){
+  df &lt;- data.frame(types=as.character(types))
+  df$similidude &lt;- unlist(sapply(fix_text(as.character(types)), costring, y=fix_text(ev_type), tvectors=EN_100k_lsa), use.names=FALSE)
+  df_ordered &lt;- df[order(df$similidude, decreasing = TRUE),] 
+  best_type &lt;- as.character(df_ordered[[1,1]])
+  best_type
+}
+
+levenshtein_type &lt;- function(ev_type,types){
+  df &lt;- data.frame(types=as.character(types))
+  df$similidude &lt;- levenshteinSim(fix_text(ev_type), fix_text(as.character(types)))
+  df_ordered &lt;- df[order(df$similidude, decreasing = TRUE),] 
+  best_type &lt;- as.character(df_ordered[[1,1]])
+  best_type
+}
+</pre></div>
+</div>
+<p>Now we can use both metrics to determine the closest valid event type. The Levenshtein distance will help to fix the small letter differences, while the semantic analysis will help with the EVTYPE levels that are close in meaning even if not close in letters and words.</p>
+<div class="highlight-{r normalizeTypes, cache=TRUE, message=FALSE, warning=FALSE} notranslate"><div class="highlight"><pre><span></span>
+event_df &lt;- repdata_data %&gt;% count(EVTYPE, sort = TRUE)
+
+event_df$type &lt;- unlist(sapply(as.character(event_df$EVTYPE), lsafun_type, types=valid_types), use.names=FALSE)
+event_df$similidude &lt;- unlist(sapply(fix_text(as.character(event_df$EVTYPE)), costring, y=fix_text(event_df$type), tvectors=EN_100k_lsa), use.names=FALSE)
+
+event_df$type_s &lt;- unlist(sapply(as.character(event_df$EVTYPE), levenshtein_type, types=valid_types), use.names=FALSE)
+event_df$similidude_s &lt;- levenshteinSim(fix_text(as.character(event_df$EVTYPE)), fix_text(event_df$type_s))
+
+event_df$type_r &lt;- ifelse(event_df$similidude_s&gt;=0.8,event_df$type_s,
+		ifelse(event_df$similidude&gt;0.64, event_df$type, NA))
+		
+</pre></div>
+</div>
+<p>Even after all that classification effort, there are some EVTYPE levels that need to be corrected by hand, and we will do it by making a function that overwrites the type column of few EVTYPE levels that weren”t correctly classified.</p>
+<div class="highlight-{r patch, cache=TRUE, message=FALSE, warning=FALSE} notranslate"><div class="highlight"><pre><span></span>
+patch &lt;- function(event_df,key,correct_value){
+  event_df$type_r[trimws(event_df$EVTYPE)==key] &lt;- correct_value
+  event_df
+}
+event_df &lt;- patch(event_df, &quot;URBAN/SML STREAM FLD&quot;, &quot;Flash Flood&quot;)
+event_df &lt;- patch(event_df, &quot;WILD/FOREST FIRE&quot;, &quot;Wildfire&quot;)
+event_df &lt;- patch(event_df, &quot;LANDSLIDE&quot;, &quot;Debris Flow&quot;)
+event_df &lt;- patch(event_df, &quot;FOG&quot;, &quot;Dense Fog&quot;)
+event_df &lt;- patch(event_df, &quot;WIND&quot;, &quot;High Wind&quot;)
+event_df &lt;- patch(event_df, &quot;EXTREME WINDCHILL&quot;, &quot;Extreme Cold/Wind Chill&quot;)
+event_df &lt;- patch(event_df, &quot;DRY MICROBURST&quot;, &quot;High Wind&quot;)
+event_df &lt;- patch(event_df, &quot;RIVER FLOOD&quot;, &quot;Flood&quot;)
+event_df &lt;- patch(event_df, &quot;RECORD WARMTH&quot;, &quot;Excessive Heat&quot;)
+event_df &lt;- patch(event_df, &quot;UNSEASONABLY WARM&quot;, &quot;Heat&quot;)
+event_df &lt;- patch(event_df, &quot;MODERATE SNOWFALL&quot;, &quot;Heavy Snow&quot;)
+event_df &lt;- patch(event_df, &quot;WINTRY MIX&quot;, &quot;Winter Weather&quot;)
+event_df &lt;- patch(event_df, &quot;HEAVY SURF&quot;, &quot;High Surf&quot;)
+event_df &lt;- patch(event_df, &quot;RECORD HEAT&quot;, &quot;Excessive Heat&quot;)
+event_df &lt;- patch(event_df, &quot;ICE&quot;, &quot;Ice Storm&quot;)
+event_df &lt;- patch(event_df, &quot;UNSEASONABLY DRY&quot;, &quot;Drought&quot;)
+event_df &lt;- patch(event_df, &quot;SMALL HAIL&quot;, &quot;Hail&quot;)
+event_df &lt;- patch(event_df, &quot;FUNNEL&quot;, &quot;Funnel Cloud&quot;)
+event_df &lt;- patch(event_df, &quot;WINDS&quot;, &quot;High Wind&quot;)
+event_df &lt;- patch(event_df, &quot;MIXED PRECIPITATION&quot;, &quot;Heavy Rain&quot;)
+event_df &lt;- patch(event_df, &quot;SEVERE THUNDERSTORMS&quot;, &quot;Thunderstorm Wind&quot;)
+
+</pre></div>
+</div>
+<p>Now we have a table to convert EVTYPE into the 48 valid types, and we can do it with the following code:</p>
+<div class="highlight-{r reclasify} notranslate"><div class="highlight"><pre><span></span>
+
+normalize_type &lt;- function(dirty_type,events){
+   events$type_r[events$EVTYPE==dirty_type]
+}
+repdata_data$type &lt;- unlist(sapply(as.character(repdata_data$EVTYPE), normalize_type, events=event_df), use.names=FALSE)
+
+converted &lt;- sum(!is.na(repdata_data$type))
+repdata_size &lt;- nrow(repdata_data)
+percent_classified &lt;- round(100 * (converted/repdata_size), digits = 1)
+print(paste0(converted, &quot; of the &quot;, repdata_size, &quot; were converted to a valid type, that is &quot;,percent_classified,&quot;% of the original database&quot;))
+
+repdata_data &lt;- repdata_data %&gt;% drop_na(type)
+</pre></div>
+</div>
+</div>
+<div class="section" id="analysis">
+<h1>Analysis<a class="headerlink" href="#analysis" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>Apply the multiplication factor to property and crop damage</p>
+<div class="highlight-{r mutiply} notranslate"><div class="highlight"><pre><span></span>
+repdata_data$PROPDMGEXP &lt;- as.character(repdata_data$PROPDMGEXP)
+repdata_data$PROPDMGEXP &lt;- toupper(repdata_data$PROPDMGEXP)
+repdata_data$PROPDMGEXP &lt;- trimws(repdata_data$PROPDMGEXP)
+
+repdata_data$PROPDMGEXP[repdata_data$PROPDMGEXP %in% c(&#39;?&#39;, &#39;-&#39;, &#39;&#39;, &#39;+&#39;)] &lt;- &#39;1&#39;
+
+repdata_data$PROPDMGEXP[repdata_data$PROPDMGEXP == &#39;K&#39;] &lt;- &#39;1000&#39;
+repdata_data$PROPDMGEXP[repdata_data$PROPDMGEXP == &#39;M&#39;] &lt;- &#39;1000000&#39;
+repdata_data$PROPDMGEXP[repdata_data$PROPDMGEXP == &#39;B&#39;] &lt;- &#39;1000000000&#39;
+repdata_data$PROPDMGEXP[repdata_data$PROPDMGEXP == &#39;H&#39;] &lt;- &#39;100&#39;
+repdata_data$PROPDMGEXP &lt;- as.numeric(repdata_data$PROPDMGEXP)
+
+repdata_data$CROPDMGEXP &lt;- as.character(repdata_data$CROPDMGEXP)
+repdata_data$CROPDMGEXP &lt;- toupper(repdata_data$CROPDMGEXP)
+repdata_data$CROPDMGEXP &lt;- trimws(repdata_data$CROPDMGEXP)
+
+repdata_data$CROPDMGEXP[repdata_data$CROPDMGEXP %in% c(&#39;?&#39;, &#39;-&#39;, &#39;&#39;, &#39;+&#39;)] &lt;- &#39;1&#39;
+
+repdata_data$CROPDMGEXP[repdata_data$CROPDMGEXP == &#39;K&#39;] &lt;- &#39;1000&#39;
+repdata_data$CROPDMGEXP[repdata_data$CROPDMGEXP == &#39;M&#39;] &lt;- &#39;1000000&#39;
+repdata_data$CROPDMGEXP[repdata_data$CROPDMGEXP == &#39;B&#39;] &lt;- &#39;1000000000&#39;
+repdata_data$CROPDMGEXP[repdata_data$CROPDMGEXP == &#39;H&#39;] &lt;- &#39;100&#39;
+repdata_data$CROPDMGEXP &lt;- as.numeric(repdata_data$CROPDMGEXP)
+
+
+repdata_data$PROPDMG &lt;- repdata_data$PROPDMG * repdata_data$PROPDMGEXP / 1000000
+repdata_data$CROPDMG &lt;- repdata_data$CROPDMG * repdata_data$CROPDMGEXP / 1000000
+</pre></div>
+</div>
+<p>Calculate the sum of all fatalities, injuries, property damage, and crop damage by type of event, sum fatalities and injuries to account for the public health, and sum property damage and crop damage to account for the economic cost:</p>
+<div class="highlight-{r sumarise totals} notranslate"><div class="highlight"><pre><span></span>
+sumarized_totals &lt;- repdata_data %&gt;% group_by(type) %&gt;% summarise_at(c(&quot;FATALITIES&quot;, &quot;INJURIES&quot;, &quot;PROPDMG&quot;,&quot;CROPDMG&quot;), list(~(sum(.,na.rm=TRUE))))
+
+sumarized_totals$health &lt;- sumarized_totals$FATALITIES + sumarized_totals$INJURIES
+sumarized_totals$economy &lt;- sumarized_totals$PROPDMG + sumarized_totals$CROPDMG
+</pre></div>
+</div>
+<p>Calculate the mean fatalities, injuries, property damage, and crop damage by type of event, sum fatalities and injuries  means to account for the public health, and sum property damage and crop damage means to account for the economic cost:</p>
+<div class="highlight-{r sumariseMeans} notranslate"><div class="highlight"><pre><span></span>
+sumarized_means &lt;- repdata_data %&gt;% group_by(type) %&gt;% summarise_at(c(&quot;FATALITIES&quot;, &quot;INJURIES&quot;, &quot;PROPDMG&quot;,&quot;CROPDMG&quot;), list(~(mean(.,na.rm=TRUE))))
+
+sumarized_means$health &lt;- sumarized_means$FATALITIES + sumarized_means$INJURIES
+sumarized_means$economy &lt;- sumarized_means$PROPDMG + sumarized_means$CROPDMG
+</pre></div>
+</div>
+</div>
+<div class="section" id="results">
+<h1>Results<a class="headerlink" href="#results" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>The following plot shows top 12 types of event in public health and economic costs.</p>
+<div class="highlight-{r plot totals} notranslate"><div class="highlight"><pre><span></span>
+par(mfrow = c(1,2))
+par(mar=c(5,9,4,2))
+par(las=2)
+
+sumarized_data_ordered &lt;- sumarized_totals[order(sumarized_totals$health, decreasing = TRUE),] 
+first_10 &lt;- sumarized_data_ordered[1:12,]
+barplot(first_10$health, main=&quot;Public Health&quot;, horiz=TRUE, names.arg=first_10$type, cex.names=0.8)
+
+tornado_percent_health &lt;- 100 * sumarized_data_ordered[1,6]/sum(sumarized_data_ordered$health)
+
+
+sumarized_data_ordered &lt;- sumarized_totals[order(sumarized_totals$economy, decreasing = TRUE),] 
+first_10 &lt;- sumarized_data_ordered[1:12,]
+barplot(first_10$economy, main=&quot;Economy(Millions)&quot;, horiz=TRUE, names.arg=first_10$type, cex.names=0.8)
+
+
+</pre></div>
+</div>
+<p><strong>Figure 1:</strong> Total damage by type of event.</p>
+<p>Tornadoes are by far the type of event that has been worst for public health and Floods are the most destructive type for economy. Tornadoes are responsible for 63% of all causalities from all type of events.</p>
+<p>Then we can plot the top 12 types of event in terms of the average damage.</p>
+<div class="highlight-{r plotMeans} notranslate"><div class="highlight"><pre><span></span>par(mfrow = c(1,2))
+par(mar=c(5,11,4,2))
+par(las=2)
+
+sumarized_data_ordered &lt;- sumarized_means[order(sumarized_means$health, decreasing = TRUE),] 
+first_10 &lt;- sumarized_data_ordered[1:12,]
+barplot(first_10$health, main=&quot;Public Health&quot;, horiz=TRUE, names.arg=first_10$type, cex.names=0.8)
+
+sumarized_data_ordered &lt;- sumarized_means[order(sumarized_means$economy, decreasing = TRUE),] 
+first_10 &lt;- sumarized_data_ordered[1:12,]
+barplot(first_10$economy, main=&quot;Economy(Millions)&quot;, horiz=TRUE, names.arg=first_10$type, cex.names=0.8)
+
+</pre></div>
+</div>
+<p><strong>Figure 2:</strong> Mean damage by type of event.</p>
+<p>As we can see Hurricanes and Tsunamis are on average the most harmful for public health and Hurricanes and Storm Surges are the most harmful types of event on average for economy. On average Hurricanes are the most destructive type of event for both economy and public health, most notably for economy where on average one hurricane costs more than 800 million dollars.</p>
+<p>It would be interesting to see the spatial distribution by type of event. To do that we will count occurrences of the top 9 event types by state. First construct a function that creates a data frame with occurrences per state.</p>
+<div class="highlight-{r sumariseByState} notranslate"><div class="highlight"><pre><span></span>
+data(statepop)
+
+count_by_state &lt;- function(event_type){
+  df_by_state &lt;- repdata_data[repdata_data$type==event_type,] %&gt;% count(STATE__, sort = TRUE)
+  colnames(df_by_state) &lt;- c(&quot;fips&quot;, &quot;val&quot;)
+  df_by_state$fips &lt;- as.character(sprintf(&quot;%02d&quot;, df_by_state$fips))
+  df_by_state &lt;- merge(statepop, df_by_state, by=&quot;fips&quot;, all = TRUE)
+  df_by_state[is.na(df_by_state)] &lt;- 0
+  df_by_state
+}
+
+tornados_by_state &lt;- count_by_state(&quot;Tornado&quot;)
+tstm_wind_by_state &lt;- count_by_state(&quot;Thunderstorm Wind&quot;)
+exc_heat_by_state &lt;- count_by_state(&quot;Excessive Heat&quot;)
+flash_flood_by_state &lt;- count_by_state(&quot;Flash Flood&quot;)
+flood_by_state &lt;- count_by_state(&quot;Flood&quot;)
+hail_by_state &lt;- count_by_state(&quot;Hail&quot;)
+lightning_by_state &lt;- count_by_state(&quot;Lightning&quot;)
+heat_by_state &lt;- count_by_state(&quot;Heat&quot;)
+hurrican_by_state &lt;- count_by_state(&quot;Hurricane (Typhoon)&quot;)
+</pre></div>
+</div>
+<p>Now that we have data frames with occurrences for the most important types of events by state, we can plot them in a grid of maps with the help of usmap library we construct a function to build the plot, then use it for the 9 types of event.</p>
+<div class="highlight-{r plotmaps} notranslate"><div class="highlight"><pre><span></span>
+plot_storm_usmap &lt;- function(data_by_state, event_type){
+  p &lt;-plot_usmap(data = data_by_state, values = &quot;val&quot;, lines = NA) +
+  scale_fill_continuous(low = &quot;cornsilk&quot;, high = &quot;brown&quot;, name = &quot;&quot;, label = scales::comma) +
+  theme(legend.position = &quot;right&quot;, plot.title = element_text(hjust = 0.5))+ labs(title = event_type)
+  p
+}
+
+p1 &lt;- plot_storm_usmap(tornados_by_state, &quot;Tornado&quot;)
+p2 &lt;- plot_storm_usmap(tstm_wind_by_state, &quot;Thunderstorm Wind&quot;)
+p3 &lt;- plot_storm_usmap(exc_heat_by_state, &quot;Excessive Heat&quot;)
+p4 &lt;- plot_storm_usmap(flash_flood_by_state, &quot;Flash Flood&quot;)
+p5 &lt;- plot_storm_usmap(flood_by_state, &quot;Flood&quot;)
+p6 &lt;- plot_storm_usmap(hail_by_state, &quot;Hail&quot;)
+p7 &lt;- plot_storm_usmap(lightning_by_state, &quot;Lightning&quot;)
+p8 &lt;- plot_storm_usmap(heat_by_state, &quot;Heat&quot;)
+p9 &lt;- plot_storm_usmap(hurrican_by_state, &quot;Hurricane (Typhoon)&quot;)
+
+grid.arrange(p1,p2,p3,p4,p5,p6,p7,p8,p9, nrow = 3, top = &quot;Events by type per state&quot;)
+</pre></div>
+</div>
+<p><strong>Figure 3:</strong> Spatial distribution by type of event.</p>
+<p>The spatial distribution of events is not homogeneous, for instance in Florida biggest threats are Hurricanes and Lightning, while in Texas Tornadoes and Hails are more common. In California hurricanes are not frequent but Heat events are very frequent. And Thunderstorm Winds are frequent almost all east part of U.S. and particularly in Texas.</p>
+</div>
+<div class="section" id="conclusions">
+<h1>Conclusions<a class="headerlink" href="#conclusions" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>For public health, Tornadoes are in sum most harmful type of event from 1950 to 2011, but Hurricanes are most harmful in average for event. For Economy, Floods are in sum most destructive types of event from 1950 to 2011, but Hurricanes are most destructive on average for event. Most notably Tornadoes on average are about 8.6 times less harmful than Hurricanes but are responsible for 63% of all causalities from all types of event.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="procesamiento.html" class="btn btn-neutral float-left" title="Sitios prioritarios marinos de Yucatán." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Víctor Hernández
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

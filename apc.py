@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# import qgis
-# from qgis.core import *
-# from qgis.analysis import *
-# from os.path import join
-# from PyQt4.QtCore import *
-# from osgeo import gdal, ogr, osr
+import qgis
+from qgis.core import *
+from qgis.analysis import *
+from os.path import join
+from PyQt4.QtCore import *
+from osgeo import gdal, ogr, osr
 import os
-# import processing as pr
+import processing as pr
 import time
 
 '''
@@ -329,6 +329,7 @@ def union_csv_shape(path_csv, path_vector, n_campo_comun, path_salida):
 
     # union del archivo csv y vector.
     unionC = QgsVectorJoinInfo()
+    unionC.prefix = ''
     unionC.joinLayerId = bd_csv.id()
     unionC.joinFieldName = vector_id
     unionC.targetFieldName = bd_csv_id
