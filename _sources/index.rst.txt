@@ -12,7 +12,10 @@ Introducción
 
    instalacion
    libreria_apc
-
+   estilo
+   procesamiento
+   ejemplo
+   exploracion_datos
 
 
 Indices and tables

@@ -1,0 +1,330 @@
+---
+title: "Historical Analysis of Severe Weather Events in U.S."
+author: "Fidel Serrano Candela"
+date: "3/4/2019"
+output: html_document
+---
+
+
+## Synopsis
+
+This document describes a historical analysis of the economic and health costs of severe weather events in US from 1950 to 2011. The analysis includes a quantification of total damages for each type of event, the mean damage per type of event, and the spatial distribution per type of event. To be able to do this analysis it was necessary to clean messy EVTYPE column from 985 event types, to comply with valid types in the National Weather Service Storm Data Documentation provided for this project.
+
+
+## Data Processing
+
+Data for the analysis comes from the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database. The database contains data from 1950 to 2011, one row per event with 37 columns containing information about the event. 
+
+```{r setup, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# install.packages("dplyr")
+# install.packages("LSAfun")
+# install.packages("usmap")
+# install.packages("ggplot2")
+# install.packages("gridExtra")
+# install.packages("stringr")
+# install.packages("RecordLinkage")
+# install.packages("tidyr")
+library(dplyr)
+library(LSAfun)
+library(usmap)
+library(ggplot2)
+library(gridExtra)
+library(stringr)
+library(RecordLinkage)
+library(tidyr)
+```
+
+To load the data directly from compressed file, and find out how many levels the column EVTYPE has:
+
+```{r readData, cache=TRUE, message=FALSE, warning=FALSE}
+
+
+repdata_data <- read.csv("repdata_data_StormData.csv.bz2")
+print(paste("EVTYPE has : ",length(levels(repdata_data$EVTYPE)), "unique values"))
+
+
+```
+
+As we can see EVTYPE is a factor with 985 levels, which means that the database has 985 types of event, but in the National Weather Service Storm Data Documentation there are only 48 valid types. 
+
+```{r valid_types, cache=TRUE, message=FALSE, warning=FALSE}
+valid_types <- c("Astronomical Low Tide", "Avalanche", "Blizzard", "Coastal Flood", "Cold/Wind Chill", "Debris Flow", "Dense Fog", "Dense Smoke", "Drought", "Dust Devil", "Dust Storm", "Excessive Heat", "Extreme Cold/Wind Chill", "Flash Flood", "Flood", "Frost/Freeze", "Funnel Cloud", "Freezing Fog", "Hail", "Heat", "Heavy Rain", "Heavy Snow", "High Surf", "High Wind", "Hurricane (Typhoon)", "Ice Storm", "Lake-Effect Snow", "Lakeshore Flood", "Lightning", "Marine Hail", "Marine High Wind", "Marine Strong Wind", "Marine Thunderstorm Wind", "Rip Current", "Seiche", "Sleet", "Storm Surge/Tide", "Strong Wind", "Thunderstorm Wind", "Tornado", "Tropical Depression", "Tropical Storm", "Tsunami", "Volcanic Ash", "Waterspout", "Wildfire", "Winter Storm","Winter Weather")
+print(paste("There are",length(valid_types), "valid types"))
+
+```
+
+This might be due to little differences in the EVTYPE column, for example there are "THUNDERSTORM WIND" and "THUNDERSTORM WINDS" or "AVALANCHE" and "AVALANCE". We will try to fix this with a function that assigns the closest of the 48 valid types to each of the 985 EVTYPE levels. To achieve that we will use semantic analysis and the Levenshtein distance. For the Levenshtein distance we will use the function levenshteinSim() from RecordLinkage library, this function receives two strings and returns a similitude score between 0 and 1, 1 meaning perfect match. And for semantic analysis we will use package LSAfun with EN_100k_lsa space gotten from http://www.lingexp.uni-tuebingen.de/z2/LSAspaces/ in particular costring function that computes the similitude of two sentences and gives a score between 0 and 1 based on the meaning of the sentence and not in the exact words. So we will construct the functions levenshtein_type() and lsafun_type() that receive an EVTYPE and return the closest valid type by the respective metric. 
+
+```{r what_type, cache=TRUE, message=FALSE, warning=FALSE}
+download.file("http://www.lingexp.uni-tuebingen.de/z2/LSAspaces/EN_100k_lsa.rda", "EN_100k_lsa.rda")
+load("EN_100k_lsa.rda")
+fix_text <- function(text){
+  text <- str_replace_all(text, "[[:punct:]]", " ")
+  text <- trimws(text)
+  text <- tolower(text)
+  text <- gsub("s\\b", "", text)
+  text <- gsub("s\\b", "", text)
+  text
+}
+
+lsafun_type <- function(ev_type,types){
+  df <- data.frame(types=as.character(types))
+  df$similidude <- unlist(sapply(fix_text(as.character(types)), costring, y=fix_text(ev_type), tvectors=EN_100k_lsa), use.names=FALSE)
+  df_ordered <- df[order(df$similidude, decreasing = TRUE),] 
+  best_type <- as.character(df_ordered[[1,1]])
+  best_type
+}
+
+levenshtein_type <- function(ev_type,types){
+  df <- data.frame(types=as.character(types))
+  df$similidude <- levenshteinSim(fix_text(ev_type), fix_text(as.character(types)))
+  df_ordered <- df[order(df$similidude, decreasing = TRUE),] 
+  best_type <- as.character(df_ordered[[1,1]])
+  best_type
+}
+```
+
+Now we can use both metrics to determine the closest valid event type. The Levenshtein distance will help to fix the small letter differences, while the semantic analysis will help with the EVTYPE levels that are close in meaning even if not close in letters and words.
+
+```{r normalizeTypes, cache=TRUE, message=FALSE, warning=FALSE}
+
+event_df <- repdata_data %>% count(EVTYPE, sort = TRUE)
+
+event_df$type <- unlist(sapply(as.character(event_df$EVTYPE), lsafun_type, types=valid_types), use.names=FALSE)
+event_df$similidude <- unlist(sapply(fix_text(as.character(event_df$EVTYPE)), costring, y=fix_text(event_df$type), tvectors=EN_100k_lsa), use.names=FALSE)
+
+event_df$type_s <- unlist(sapply(as.character(event_df$EVTYPE), levenshtein_type, types=valid_types), use.names=FALSE)
+event_df$similidude_s <- levenshteinSim(fix_text(as.character(event_df$EVTYPE)), fix_text(event_df$type_s))
+
+event_df$type_r <- ifelse(event_df$similidude_s>=0.8,event_df$type_s,
+		ifelse(event_df$similidude>0.64, event_df$type, NA))
+		
+```
+
+Even after all that classification effort, there are some EVTYPE levels that need to be corrected by hand, and we will do it by making a function that overwrites the type column of few EVTYPE levels that weren't correctly classified.
+
+
+```{r patch, cache=TRUE, message=FALSE, warning=FALSE}
+
+patch <- function(event_df,key,correct_value){
+  event_df$type_r[trimws(event_df$EVTYPE)==key] <- correct_value
+  event_df
+}
+event_df <- patch(event_df, "URBAN/SML STREAM FLD", "Flash Flood")
+event_df <- patch(event_df, "WILD/FOREST FIRE", "Wildfire")
+event_df <- patch(event_df, "LANDSLIDE", "Debris Flow")
+event_df <- patch(event_df, "FOG", "Dense Fog")
+event_df <- patch(event_df, "WIND", "High Wind")
+event_df <- patch(event_df, "EXTREME WINDCHILL", "Extreme Cold/Wind Chill")
+event_df <- patch(event_df, "DRY MICROBURST", "High Wind")
+event_df <- patch(event_df, "RIVER FLOOD", "Flood")
+event_df <- patch(event_df, "RECORD WARMTH", "Excessive Heat")
+event_df <- patch(event_df, "UNSEASONABLY WARM", "Heat")
+event_df <- patch(event_df, "MODERATE SNOWFALL", "Heavy Snow")
+event_df <- patch(event_df, "WINTRY MIX", "Winter Weather")
+event_df <- patch(event_df, "HEAVY SURF", "High Surf")
+event_df <- patch(event_df, "RECORD HEAT", "Excessive Heat")
+event_df <- patch(event_df, "ICE", "Ice Storm")
+event_df <- patch(event_df, "UNSEASONABLY DRY", "Drought")
+event_df <- patch(event_df, "SMALL HAIL", "Hail")
+event_df <- patch(event_df, "FUNNEL", "Funnel Cloud")
+event_df <- patch(event_df, "WINDS", "High Wind")
+event_df <- patch(event_df, "MIXED PRECIPITATION", "Heavy Rain")
+event_df <- patch(event_df, "SEVERE THUNDERSTORMS", "Thunderstorm Wind")
+
+
+```
+
+Now we have a table to convert EVTYPE into the 48 valid types, and we can do it with the following code: 
+
+```{r reclasify}
+
+
+normalize_type <- function(dirty_type,events){
+   events$type_r[events$EVTYPE==dirty_type]
+}
+repdata_data$type <- unlist(sapply(as.character(repdata_data$EVTYPE), normalize_type, events=event_df), use.names=FALSE)
+
+converted <- sum(!is.na(repdata_data$type))
+repdata_size <- nrow(repdata_data)
+percent_classified <- round(100 * (converted/repdata_size), digits = 1)
+print(paste0(converted, " of the ", repdata_size, " were converted to a valid type, that is ",percent_classified,"% of the original database"))
+
+repdata_data <- repdata_data %>% drop_na(type)
+```
+
+
+
+## Analysis
+
+Apply the multiplication factor to property and crop damage
+
+```{r mutiply}
+
+repdata_data$PROPDMGEXP <- as.character(repdata_data$PROPDMGEXP)
+repdata_data$PROPDMGEXP <- toupper(repdata_data$PROPDMGEXP)
+repdata_data$PROPDMGEXP <- trimws(repdata_data$PROPDMGEXP)
+
+repdata_data$PROPDMGEXP[repdata_data$PROPDMGEXP %in% c('?', '-', '', '+')] <- '1'
+
+repdata_data$PROPDMGEXP[repdata_data$PROPDMGEXP == 'K'] <- '1000'
+repdata_data$PROPDMGEXP[repdata_data$PROPDMGEXP == 'M'] <- '1000000'
+repdata_data$PROPDMGEXP[repdata_data$PROPDMGEXP == 'B'] <- '1000000000'
+repdata_data$PROPDMGEXP[repdata_data$PROPDMGEXP == 'H'] <- '100'
+repdata_data$PROPDMGEXP <- as.numeric(repdata_data$PROPDMGEXP)
+
+repdata_data$CROPDMGEXP <- as.character(repdata_data$CROPDMGEXP)
+repdata_data$CROPDMGEXP <- toupper(repdata_data$CROPDMGEXP)
+repdata_data$CROPDMGEXP <- trimws(repdata_data$CROPDMGEXP)
+
+repdata_data$CROPDMGEXP[repdata_data$CROPDMGEXP %in% c('?', '-', '', '+')] <- '1'
+
+repdata_data$CROPDMGEXP[repdata_data$CROPDMGEXP == 'K'] <- '1000'
+repdata_data$CROPDMGEXP[repdata_data$CROPDMGEXP == 'M'] <- '1000000'
+repdata_data$CROPDMGEXP[repdata_data$CROPDMGEXP == 'B'] <- '1000000000'
+repdata_data$CROPDMGEXP[repdata_data$CROPDMGEXP == 'H'] <- '100'
+repdata_data$CROPDMGEXP <- as.numeric(repdata_data$CROPDMGEXP)
+
+
+repdata_data$PROPDMG <- repdata_data$PROPDMG * repdata_data$PROPDMGEXP / 1000000
+repdata_data$CROPDMG <- repdata_data$CROPDMG * repdata_data$CROPDMGEXP / 1000000
+
+```
+
+Calculate the sum of all fatalities, injuries, property damage, and crop damage by type of event, sum fatalities and injuries to account for the public health, and sum property damage and crop damage to account for the economic cost:
+
+```{r sumarise totals}
+
+sumarized_totals <- repdata_data %>% group_by(type) %>% summarise_at(c("FATALITIES", "INJURIES", "PROPDMG","CROPDMG"), list(~(sum(.,na.rm=TRUE))))
+
+sumarized_totals$health <- sumarized_totals$FATALITIES + sumarized_totals$INJURIES
+sumarized_totals$economy <- sumarized_totals$PROPDMG + sumarized_totals$CROPDMG
+
+```
+
+Calculate the mean fatalities, injuries, property damage, and crop damage by type of event, sum fatalities and injuries  means to account for the public health, and sum property damage and crop damage means to account for the economic cost:
+
+```{r sumariseMeans}
+
+sumarized_means <- repdata_data %>% group_by(type) %>% summarise_at(c("FATALITIES", "INJURIES", "PROPDMG","CROPDMG"), list(~(mean(.,na.rm=TRUE))))
+
+sumarized_means$health <- sumarized_means$FATALITIES + sumarized_means$INJURIES
+sumarized_means$economy <- sumarized_means$PROPDMG + sumarized_means$CROPDMG
+```
+
+
+## Results
+
+The following plot shows top 12 types of event in public health and economic costs. 
+
+```{r plot totals}
+
+par(mfrow = c(1,2))
+par(mar=c(5,9,4,2))
+par(las=2)
+
+sumarized_data_ordered <- sumarized_totals[order(sumarized_totals$health, decreasing = TRUE),] 
+first_10 <- sumarized_data_ordered[1:12,]
+barplot(first_10$health, main="Public Health", horiz=TRUE, names.arg=first_10$type, cex.names=0.8)
+
+tornado_percent_health <- 100 * sumarized_data_ordered[1,6]/sum(sumarized_data_ordered$health)
+
+
+sumarized_data_ordered <- sumarized_totals[order(sumarized_totals$economy, decreasing = TRUE),] 
+first_10 <- sumarized_data_ordered[1:12,]
+barplot(first_10$economy, main="Economy(Millions)", horiz=TRUE, names.arg=first_10$type, cex.names=0.8)
+
+
+
+```
+
+**Figure 1:** Total damage by type of event.
+
+Tornadoes are by far the type of event that has been worst for public health and Floods are the most destructive type for economy. Tornadoes are responsible for 63% of all causalities from all type of events.
+
+Then we can plot the top 12 types of event in terms of the average damage. 
+
+```{r plotMeans}
+par(mfrow = c(1,2))
+par(mar=c(5,11,4,2))
+par(las=2)
+
+sumarized_data_ordered <- sumarized_means[order(sumarized_means$health, decreasing = TRUE),] 
+first_10 <- sumarized_data_ordered[1:12,]
+barplot(first_10$health, main="Public Health", horiz=TRUE, names.arg=first_10$type, cex.names=0.8)
+
+sumarized_data_ordered <- sumarized_means[order(sumarized_means$economy, decreasing = TRUE),] 
+first_10 <- sumarized_data_ordered[1:12,]
+barplot(first_10$economy, main="Economy(Millions)", horiz=TRUE, names.arg=first_10$type, cex.names=0.8)
+
+
+```
+
+**Figure 2:** Mean damage by type of event.
+
+As we can see Hurricanes and Tsunamis are on average the most harmful for public health and Hurricanes and Storm Surges are the most harmful types of event on average for economy. On average Hurricanes are the most destructive type of event for both economy and public health, most notably for economy where on average one hurricane costs more than 800 million dollars. 
+
+
+It would be interesting to see the spatial distribution by type of event. To do that we will count occurrences of the top 9 event types by state. First construct a function that creates a data frame with occurrences per state.
+
+
+```{r sumariseByState}
+
+data(statepop)
+
+count_by_state <- function(event_type){
+  df_by_state <- repdata_data[repdata_data$type==event_type,] %>% count(STATE__, sort = TRUE)
+  colnames(df_by_state) <- c("fips", "val")
+  df_by_state$fips <- as.character(sprintf("%02d", df_by_state$fips))
+  df_by_state <- merge(statepop, df_by_state, by="fips", all = TRUE)
+  df_by_state[is.na(df_by_state)] <- 0
+  df_by_state
+}
+
+tornados_by_state <- count_by_state("Tornado")
+tstm_wind_by_state <- count_by_state("Thunderstorm Wind")
+exc_heat_by_state <- count_by_state("Excessive Heat")
+flash_flood_by_state <- count_by_state("Flash Flood")
+flood_by_state <- count_by_state("Flood")
+hail_by_state <- count_by_state("Hail")
+lightning_by_state <- count_by_state("Lightning")
+heat_by_state <- count_by_state("Heat")
+hurrican_by_state <- count_by_state("Hurricane (Typhoon)")
+
+```
+
+Now that we have data frames with occurrences for the most important types of events by state, we can plot them in a grid of maps with the help of usmap library we construct a function to build the plot, then use it for the 9 types of event.
+
+```{r plotmaps}
+
+plot_storm_usmap <- function(data_by_state, event_type){
+  p <-plot_usmap(data = data_by_state, values = "val", lines = NA) +
+  scale_fill_continuous(low = "cornsilk", high = "brown", name = "", label = scales::comma) +
+  theme(legend.position = "right", plot.title = element_text(hjust = 0.5))+ labs(title = event_type)
+  p
+}
+
+p1 <- plot_storm_usmap(tornados_by_state, "Tornado")
+p2 <- plot_storm_usmap(tstm_wind_by_state, "Thunderstorm Wind")
+p3 <- plot_storm_usmap(exc_heat_by_state, "Excessive Heat")
+p4 <- plot_storm_usmap(flash_flood_by_state, "Flash Flood")
+p5 <- plot_storm_usmap(flood_by_state, "Flood")
+p6 <- plot_storm_usmap(hail_by_state, "Hail")
+p7 <- plot_storm_usmap(lightning_by_state, "Lightning")
+p8 <- plot_storm_usmap(heat_by_state, "Heat")
+p9 <- plot_storm_usmap(hurrican_by_state, "Hurricane (Typhoon)")
+
+grid.arrange(p1,p2,p3,p4,p5,p6,p7,p8,p9, nrow = 3, top = "Events by type per state")
+
+```
+
+**Figure 3:** Spatial distribution by type of event.
+
+The spatial distribution of events is not homogeneous, for instance in Florida biggest threats are Hurricanes and Lightning, while in Texas Tornadoes and Hails are more common. In California hurricanes are not frequent but Heat events are very frequent. And Thunderstorm Winds are frequent almost all east part of U.S. and particularly in Texas.
+
+## Conclusions
+
+For public health, Tornadoes are in sum most harmful type of event from 1950 to 2011, but Hurricanes are most harmful in average for event. For Economy, Floods are in sum most destructive types of event from 1950 to 2011, but Hurricanes are most destructive on average for event. Most notably Tornadoes on average are about 8.6 times less harmful than Hurricanes but are responsible for 63% of all causalities from all types of event. 
+
+

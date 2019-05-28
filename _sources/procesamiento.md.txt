@@ -1,0 +1,34 @@
+# Sitios prioritarios marinos de Yucatán.
+
+Ruta: /sig_papiit/procesamiento/sitios_marinos
+
+## conseguir los insumos
+
+- División politica estatal escala 1:250,000 año 2015 - CONABIO
+- Sitios prioritarios marinos para la conservación de la biodiversidad - CONABIO
+
+## procesamiento
+
+1. Se crea la carpeta en dropbox sig con el nombre **sitios_marinos**.
+2. Dentro de la carpeta de sitios_marinos se crea una carpeta llamada "insumos" en la cual se colocan las capas necesarias para realizar la actividad.
+3. Ejecutar Qgis 2.18
+4. Se carga la capa **dest_2015gw** que representa la División politca estatal.
+5. Se extrae el polígono de Yucatán y se guarda en una capa yucatan.shp
+6. Se carga la capa **spm1mgw** que representa los sitios prioritarios marinos para la conservación de la biodiversidad
+7. Se corta la capa spm1mgw.shp con la capa yucatan.shp y se nombra conforme a protocolo - > tp_sitios_marinos_v1.shp
+8. Se reproyecta la capa a WGS84/UTM z16N para recalcular el área, la capa se guarda con el nombre tp_sitios_marinos_utm_v3
+9. Se recalcula el area con la herramienta calculadora de campo, se actualizan los campos **AREA**, **PERIMETER**, **AREA_HA**
+
+  - Para el cálculo del campo AREA se utiliza $area como expresión
+  - Para el cálculo del campo PERIMETER se utiliza  $perimeter
+  - Para el cálculo del campo AREA_HA se utiliza $area/10000
+
+
+10. Una vez terminado el objetivo de la actividad. se guardan cambios en la capa.
+11. Se crea una carpeta **sitios_marinos** en la carpeta de entregables, en la cual se almacena una copia de la ultima versión de la capa procesada, quitando los prefijos tp_ y el indicativo de versión. Ejemplo  sitios_marinos_utm.shp
+
+12. Ingresar a la plataforma de geonetwork para la generación de metadatos de la capa.
+
+13. Se crea el metadato de atributos CDA_sitios_marinos_utm
+14. Se crea el metadato del conjunto de datos y se asocia el metadato de atributos.
+15. Rellenar el formulario de entrega de recepcion
