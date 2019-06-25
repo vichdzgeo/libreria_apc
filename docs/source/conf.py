@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -20,8 +22,8 @@ sys.path.insert(0, os.path.abspath('../../'))
 # -- Project information -----------------------------------------------------
 
 project = 'Libreria Python-Qgis2.18 LANCIS-APC'
-copyright = '2019, Víctor Hernández'
-author = 'Víctor Hernández'
+copyright = '2019, Victor Hernandez'
+author = 'Victor Hernandez'
 
 # The short X.Y version
 version = ''
@@ -145,7 +147,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'LibreriaPython-Qgis218LANCIS-APC.tex', 'Libreria Python-Qgis2.18 LANCIS-APC Documentation',
-     'Víctor Hernández', 'manual'),
+     'Victor Hernandez', 'manual'),
 ]
 
 

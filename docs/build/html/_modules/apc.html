@@ -84,19 +84,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../instalacion.html">Instalación</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../libreria_apc.html">Biblioteca Python-Qgis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../estilo.html">Estilo de código en python</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../procesamiento.html">Sitios prioritarios marinos de Yucatán.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ejemplo.html">title: «Historical Analysis of Severe Weather Events in U.S.»
-author: «Fidel Serrano Candela»
-date: «3/4/2019»
-output: html_document</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ejemplo.html#synopsis">Synopsis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ejemplo.html#data-processing">Data Processing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ejemplo.html#analysis">Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ejemplo.html#results">Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ejemplo.html#conclusions">Conclusions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../exploracion_datos.html">Estadística descriptiva</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../exploracion_datos.html#histogramas">Histogramas</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../exploracion_datos.html#diagramas-de-dispersion">Diagramas de dispersión</a></li>
 </ul>
 
             
@@ -162,14 +149,16 @@ output: html_document</a></li>
   <h1>Código fuente para apc</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="c1"># import qgis</span>
-<span class="c1"># from qgis.core import *</span>
-<span class="c1"># from qgis.analysis import *</span>
-<span class="c1"># from os.path import join</span>
-<span class="c1"># from PyQt4.QtCore import *</span>
-<span class="c1"># from osgeo import gdal, ogr, osr</span>
+<span class="kn">import</span> <span class="nn">qgis</span>
+<span class="kn">from</span> <span class="nn">qgis.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">qgis.analysis</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">PyQt4.QtCore</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">osgeo</span> <span class="k">import</span> <span class="n">gdal</span><span class="p">,</span> <span class="n">ogr</span><span class="p">,</span> <span class="n">osr</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="c1"># import processing as pr</span>
+<span class="kn">import</span> <span class="nn">sys</span> 
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;/usr/share/qgis/python/plugins/&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">processing</span> <span class="k">as</span> <span class="nn">pr</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="sd">&#39;&#39;&#39;</span>
@@ -186,8 +175,8 @@ output: html_document</a></li>
 <div class="viewcode-block" id="v_interseccion"><a class="viewcode-back" href="../libreria_apc.html#apc.v_interseccion">[documentos]</a><span class="k">def</span> <span class="nf">v_interseccion</span><span class="p">(</span><span class="n">vector_a</span><span class="p">,</span> <span class="n">vector_b</span><span class="p">,</span> <span class="n">path_s</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    v_interseccion(vector_a,vector_b,path_s)</span>
-<span class="sd">    Esta funcion calcula la interseccion geometrica de las capas poligonales</span>
-<span class="sd">    superpuestas es decir, vector_a y vector_b</span>
+<span class="sd">    Esta funcion calcula la interseccion  de dos capas vectoriales es decir,</span>
+<span class="sd">    vector_a y vector_b</span>
 
 <span class="sd">    :param vector_a: Ruta o path de la capa A</span>
 <span class="sd">    :type vector_a: String</span>
@@ -210,8 +199,10 @@ output: html_document</a></li>
 <span class="sd">    poligono en kilometros cuadrados.</span>
 
 <span class="sd">    :param path_vector: ruta de la capa vectorial, debe estar en una proyeccion</span>
-<span class="sd">                        cartografica que exrprese sun unidades lineales,</span>
+<span class="sd">                        cartografica que exrprese sus unidades lineales,</span>
 <span class="sd">                        ej: UTM14N o CCL</span>
+<span class="sd">    :type path_vector: String</span>
+
 <span class="sd">    :param nombre_campo: ingresar el nombre del campo ej: area_km2</span>
 <span class="sd">    :type nombre_campo: string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -238,11 +229,12 @@ output: html_document</a></li>
 <span class="sd">    Esta funcion genera un campo nuevo y calcula el area de cada</span>
 <span class="sd">    poligono en hectareas Parametros:</span>
 
-<span class="sd">    :param path_vector: ruta de la capa vectorial, debe estar en una</span>
-<span class="sd">                        proyeccion cartografica que exrprese sun unidades</span>
-<span class="sd">                       lineales, ej: UTM14N o CCL</span>
-<span class="sd">    :param nombre_campo: ingresar el nombre del campo ej: area_ha</span>
+<span class="sd">    :param path_vector: ruta de la capa vectorial, debe estar en una \</span>
+<span class="sd">                        proyeccion cartografica que exrprese sus unidades \</span>
+<span class="sd">                        lineales, ej: UTM14N o CCL</span>
+<span class="sd">    :type path_vector: String</span>
 
+<span class="sd">    :param nombre_campo: ingresar el nombre del campo ej: area_ha</span>
 <span class="sd">    :type nombre_campo: string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -269,7 +261,10 @@ output: html_document</a></li>
 <span class="sd">    la capa es creada con el mismo sistema de referencia que el origen.</span>
 
 <span class="sd">    :param path_vector: ruta de la capa original</span>
+<span class="sd">    :type path_vector: String</span>
+
 <span class="sd">    :param path_salida: ruta de donde sera almacenada la capa</span>
+<span class="sd">    :type path_salida: String</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vlayer</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="n">path_vector</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;ogr&quot;</span><span class="p">)</span>
     <span class="n">clonarv</span> <span class="o">=</span> <span class="n">QgsVectorFileWriter</span><span class="o">.</span><span class="n">writeAsVectorFormat</span><span class="p">(</span><span class="n">vlayer</span><span class="p">,</span>
@@ -279,18 +274,24 @@ output: html_document</a></li>
                                                       <span class="s2">&quot;ESRI Shapefile&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="crear_campo"><a class="viewcode-back" href="../libreria_apc.html#apc.crear_campo">[documentos]</a><span class="k">def</span> <span class="nf">crear_campo</span><span class="p">(</span><span class="n">path_vector</span><span class="p">,</span> <span class="n">nombre_campo</span><span class="p">,</span> <span class="n">tipo</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Crear_campo(path_vector,nombre_campo,tipo)</span>
-<span class="sd">    Esta funcion crea un campo segun el tipo especificado.</span>
+<div class="viewcode-block" id="crear_campo"><a class="viewcode-back" href="../libreria_apc.html#apc.crear_campo">[documentos]</a><span class="k">def</span> <span class="nf">crear_campo</span><span class="p">(</span> <span class="n">path_vector</span><span class="p">,</span> <span class="n">nombre_campo</span><span class="p">,</span> <span class="n">tipo</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Esta funcion crea un campo segun el tipo especificado.</span>
 <span class="sd">    Parametros:</span>
-<span class="sd">        path_vector: La ruta del archivo shapefile al cual se le quiere</span>
-<span class="sd">                      agregar el campo</span>
-<span class="sd">        nombre_campo: Nombre del campo nuevo</span>
-<span class="sd">        tipo: es el tipo de campo que se quiere crear:</span>
-<span class="sd">        Int: para crear un campo tipo entero</span>
-<span class="sd">        Double: para crear un campo tipo doble o flotante</span>
-<span class="sd">        String: para crear un campo tipo texto</span>
-<span class="sd">        Date: para crear un campo tipo fecha &#39;&#39;&#39;</span>
+<span class="sd">    :param path_vector: La ruta del archivo shapefile al cual se le quiere \</span>
+<span class="sd">                        agregar el campo</span>
+<span class="sd">    :type path_vector: String</span>
+
+<span class="sd">    :param nombre_campo: Nombre del campo nuevo</span>
+<span class="sd">    :type nombre_campo: Sting</span>
+
+<span class="sd">    :param tipo: es el tipo de campo que se quiere crear</span>
+<span class="sd">    </span>
+<span class="sd">    Int: para crear un campo tipo entero</span>
+<span class="sd">    Double: para crear un campo tipo doble o flotante</span>
+<span class="sd">    String: para crear un campo tipo texto</span>
+<span class="sd">    Date: para crear un campo tipo fecha</span>
+<span class="sd">    :type tipo: String</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nombre_campo</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;el nombre del campo debe contener maximo 10 caracteres&quot;</span><span class="p">)</span>
@@ -319,23 +320,35 @@ output: html_document</a></li>
             <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;el tipo no existe o hay error en su declaracion&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="colonia_ageb"><a class="viewcode-back" href="../libreria_apc.html#apc.colonia_ageb">[documentos]</a><span class="k">def</span> <span class="nf">colonia_ageb</span><span class="p">(</span><span class="n">path_salida</span><span class="p">,</span>
-                 <span class="n">path_agebs</span><span class="p">,</span>
-                 <span class="n">path_colonias</span><span class="p">,</span>
-                 <span class="n">ageb_id</span><span class="p">,</span>
-                 <span class="n">col_id</span><span class="p">,</span>
-                 <span class="n">campos_resampling</span><span class="p">,</span>
-                 <span class="n">nombre_temp</span><span class="p">):</span>
+<div class="viewcode-block" id="colonia_ageb"><a class="viewcode-back" href="../libreria_apc.html#apc.colonia_ageb">[documentos]</a><span class="k">def</span> <span class="nf">colonia_ageb</span><span class="p">(</span><span class="n">path_salida</span><span class="p">,</span> <span class="n">path_agebs</span><span class="p">,</span> <span class="n">path_colonias</span><span class="p">,</span><span class="n">ageb_id</span><span class="p">,</span> <span class="n">col_id</span><span class="p">,</span> 
+                 <span class="n">campos_resampling</span><span class="p">,</span> <span class="n">nombre_temp</span><span class="p">):</span>
+
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Parametros:</span>
-<span class="sd">    path_salida = Ruta de la salida de los datos</span>
-<span class="sd">    path_agebs = ruta de la capa de agebs</span>
-<span class="sd">    path_colonias =  ruta de la capa de colonias</span>
-<span class="sd">    ageb_id = nombre del campo de id de los agebs</span>
-<span class="sd">    col_id = nombre del campo de id de la colonia</span>
-<span class="sd">    campos_resampling = nombre de los campos</span>
-<span class="sd">    nombre_temp = nombre del archivo que se genera al intersectar la copia de</span>
-<span class="sd">    colonias con la de agebs</span>
+<span class="sd">    Esta función realiza un escalamiento de datos que estan a nivel geométrico</span>
+<span class="sd">    de colonía y los pasa a nivel de ageb.</span>
+
+
+<span class="sd">    :param path_salida: Ruta de la salida de la capa a nivel de ageb</span>
+<span class="sd">    :type path_salida: String</span>
+
+<span class="sd">    :param path_agebs: ruta de la capa de agebs</span>
+<span class="sd">    :type path_agebs: String</span>
+
+<span class="sd">    :param path_colonias:  ruta de la capa de colonias</span>
+<span class="sd">    :type path_colonias: String</span>
+
+<span class="sd">    :param ageb_id: nombre del campo de id de los agebs</span>
+<span class="sd">    :type ageb_id: String</span>
+
+<span class="sd">    :param col_id: nombre del campo de id de la colonia</span>
+<span class="sd">    :type col_id: String</span>
+
+<span class="sd">    :param campos_resampling: nombre de los campos de la cap de colonia</span>
+<span class="sd">    :type campos_resampling: List the strings</span>
+
+<span class="sd">    :param nombre_temp: nombre del archivo que se genera al intersectar la \</span>
+<span class="sd">                        copia de colonias con la de agebs</span>
+<span class="sd">    :type nombre_temp: String</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">new_geom_id</span> <span class="o">=</span> <span class="n">ageb_id</span>
     <span class="n">new_geom</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="n">path_agebs</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;ogr&quot;</span><span class="p">)</span>
@@ -417,16 +430,23 @@ output: html_document</a></li>
 
     <span class="n">new_geom</span><span class="o">.</span><span class="n">commitChanges</span><span class="p">()</span></div>
 
-
 <div class="viewcode-block" id="est_raster_media"><a class="viewcode-back" href="../libreria_apc.html#apc.est_raster_media">[documentos]</a><span class="k">def</span> <span class="nf">est_raster_media</span><span class="p">(</span><span class="n">path_vector</span><span class="p">,</span> <span class="n">path_raster</span><span class="p">,</span> <span class="n">nombre_campo</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Esta funcion calcula la media de los valores de pixel</span>
-<span class="sd">    contenidos en un raster sobreponiendo una capa vectorial de poligonos</span>
+<span class="sd">    Esta funcion calcula la media de los valores de pixel de un raster</span>
+<span class="sd">    contenidos en un área superpuesta de una capa vectorial.</span>
+
 <span class="sd">    Parametros:</span>
-<span class="sd">        path_vector = ruta de la capa que contendra los datos extraidos del archivo raster</span>
-<span class="sd">        path_raster = ruta de la capa raster de la cual se extraera el valor</span>
-<span class="sd">        nombre_campo = nombre del campo que se creara para agregar los valores de la capa</span>
-<span class="sd">        raster a la capa vectorial</span>
+<span class="sd">    :param path_vector: ruta de la capa que contendra los datos extraidos del \</span>
+<span class="sd">                        archivo raster</span>
+<span class="sd">    :type path_vector:String</span>
+
+<span class="sd">    :param path_raster: ruta de la capa raster de la cual se extraera el valor</span>
+<span class="sd">    :type path_raster: String</span>
+<span class="sd">    </span>
+<span class="sd">    :param nombre_campo: nombre del campo que se creara para agregar los \</span>
+<span class="sd">                         valores de la capa raster a la capa vectorial</span>
+<span class="sd">    :type nombre_campo: String</span>
+<span class="sd">    </span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">vector</span><span class="o">=</span><span class="n">QgsVectorLayer</span><span class="p">(</span><span class="n">path_vector</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;ogr&quot;</span><span class="p">)</span>
     <span class="n">zoneStat</span> <span class="o">=</span> <span class="n">QgsZonalStatistics</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">path_raster</span><span class="p">,</span>
@@ -436,12 +456,22 @@ output: html_document</a></li>
 
 <div class="viewcode-block" id="raster_poligono"><a class="viewcode-back" href="../libreria_apc.html#apc.raster_poligono">[documentos]</a><span class="k">def</span> <span class="nf">raster_poligono</span><span class="p">(</span><span class="n">path_tif</span><span class="p">,</span> <span class="n">path_s_vector</span><span class="p">,</span> <span class="n">nombre_campo</span><span class="p">,</span> <span class="n">epsg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Realiza el proceso de vectorizacion de una capa raster</span>
+<span class="sd">    Realiza el proceso de vectorización de una capa raster</span>
 <span class="sd">    Parametros:</span>
-<span class="sd">        path_tif= ruta de la capa raster</span>
-<span class="sd">        path_s_vector= ruta de salida de la capa vectorial</span>
-<span class="sd">        nombre_campo= nombre de un nuevo campo que contiene los valores de pixel</span>
-<span class="sd">        epsg:</span>
+
+<span class="sd">    :param path_tif: ruta de la capa raster</span>
+<span class="sd">    :type path_tif: String</span>
+
+<span class="sd">    :param path_s_vector: ruta de salida de la capa vectorial</span>
+<span class="sd">    :type path_s_vector: String</span>
+
+<span class="sd">    :param nombre_campo: nombre de un nuevo campo que contiene los valores \</span>
+<span class="sd">                         de pixel</span>
+<span class="sd">    :type nombre_campo: String</span>
+
+<span class="sd">    :param epsg: Código EPSG para la zona 14N UTM con datum WGS84 el \</span>
+<span class="sd">                 código es 32614</span>
+<span class="sd">    :type epsg: Int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">srs</span> <span class="o">=</span> <span class="n">osr</span><span class="o">.</span><span class="n">SpatialReference</span><span class="p">()</span>
     <span class="n">srs</span><span class="o">.</span><span class="n">ImportFromEPSG</span><span class="p">(</span><span class="n">epsg</span><span class="p">)</span>
@@ -467,13 +497,28 @@ output: html_document</a></li>
 
 <div class="viewcode-block" id="union_csv_shape"><a class="viewcode-back" href="../libreria_apc.html#apc.union_csv_shape">[documentos]</a><span class="k">def</span> <span class="nf">union_csv_shape</span><span class="p">(</span><span class="n">path_csv</span><span class="p">,</span> <span class="n">path_vector</span><span class="p">,</span> <span class="n">n_campo_comun</span><span class="p">,</span> <span class="n">path_salida</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Funcion para unir una base de datos csv a un archivo shapefile, por medio de un campo en comun.</span>
-<span class="sd">        El resultado es una nueva capa vectorial con la union tabular.</span>
+<span class="sd">        Función para unir una base de datos csv a un archivo shapefile, \</span>
+<span class="sd">        por medio de un campo en común.</span>
+<span class="sd">        El resultado es una nueva capa vectorial con la unión tabular.</span>
 <span class="sd">        Parametros:</span>
-<span class="sd">            path_csv = ruta del archivo csv, usar / en vez de &#39;\&#39;</span>
-<span class="sd">            path_vector = ruta de la capa vectorial</span>
-<span class="sd">            n_campo_comun = nombre del campo en comun</span>
-<span class="sd">            path_salida = ruta de salida para la nueva capa vectorial que contiene la union</span>
+<span class="sd">        </span>
+<span class="sd">        :param path_csv: ruta del archivo csv.</span>
+<span class="sd">        :type path_csv: String</span>
+<span class="sd">                </span>
+<span class="sd">        :param path_vector: ruta de la capa vectorial</span>
+<span class="sd">        :type path_vector: String</span>
+<span class="sd">        </span>
+<span class="sd">        :param n_campo_comun: nombre del campo en comun</span>
+<span class="sd">        :type n_campo_comun: String</span>
+<span class="sd">        </span>
+<span class="sd">        :param path_salida: ruta de salida para la nueva capa vectorial que \</span>
+<span class="sd">                            contiene la union</span>
+<span class="sd">        :type path_salida: String </span>
+<span class="sd">        </span>
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            Para el separador de directorios en la ruta usar &quot;/&quot; </span>
+<span class="sd">            </span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">vector</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="n">path_vector</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;ogr&quot;</span><span class="p">)</span>
     <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">addMapLayer</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
@@ -491,6 +536,7 @@ output: html_document</a></li>
 
     <span class="c1"># union del archivo csv y vector.</span>
     <span class="n">unionC</span> <span class="o">=</span> <span class="n">QgsVectorJoinInfo</span><span class="p">()</span>
+    <span class="n">unionC</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">unionC</span><span class="o">.</span><span class="n">joinLayerId</span> <span class="o">=</span> <span class="n">bd_csv</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
     <span class="n">unionC</span><span class="o">.</span><span class="n">joinFieldName</span> <span class="o">=</span> <span class="n">vector_id</span>
     <span class="n">unionC</span><span class="o">.</span><span class="n">targetFieldName</span> <span class="o">=</span> <span class="n">bd_csv_id</span>
@@ -506,19 +552,27 @@ output: html_document</a></li>
 
 <div class="viewcode-block" id="v_cortar"><a class="viewcode-back" href="../libreria_apc.html#apc.v_cortar">[documentos]</a><span class="k">def</span> <span class="nf">v_cortar</span><span class="p">(</span><span class="n">path_mask</span><span class="p">,</span> <span class="n">path_zona</span><span class="p">,</span> <span class="n">path_salida</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Esta funcion permite cortar dos capas vectoriales</span>
+<span class="sd">    Esta función permite cortar dos capas vectoriales</span>
 <span class="sd">    Parametros:</span>
-<span class="sd">        path_mask= capa vectorial que sirve como mascara de recorte.</span>
-<span class="sd">        path_zona= capa vectorial de la capa a recortar.</span>
-<span class="sd">        path_salida= ruta de la capa generada por el proceso.</span>
+<span class="sd">    </span>
+<span class="sd">    :param path_mask: ruta de la capa vectorial que sirve como mascara de corte.</span>
+<span class="sd">    :type path_mask: String</span>
+<span class="sd">    </span>
+<span class="sd">    :param path_zona: ruta de la capa vectorial de la capa a cortar.</span>
+<span class="sd">    :type path_mask: String</span>
+<span class="sd">    </span>
+<span class="sd">    :param path_salida: ruta de la capa generada por el proceso.</span>
+<span class="sd">    :type path_mask: String</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">pr</span><span class="o">.</span><span class="n">runalg</span><span class="p">(</span><span class="s2">&quot;saga:polygonclipping&quot;</span><span class="p">,</span> <span class="n">path_mask</span><span class="p">,</span> <span class="n">path_zona</span><span class="p">,</span> <span class="n">path_salida</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="lista_shp"><a class="viewcode-back" href="../libreria_apc.html#apc.lista_shp">[documentos]</a><span class="k">def</span> <span class="nf">lista_shp</span><span class="p">(</span><span class="n">path_carpeta</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Parametros:</span>
-<span class="sd">        path_carpeta = ruta que contiene los archivos shape a procesar</span>
+<span class="sd">    </span>
+<span class="sd">        </span>
+<span class="sd">    :param path_carpeta: ruta que contiene los archivos shape a procesar</span>
+<span class="sd">    :type path_carpeta: String </span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path_carpeta</span><span class="p">):</span>
         <span class="n">lista</span> <span class="o">=</span> <span class="p">[]</span>
@@ -529,54 +583,83 @@ output: html_document</a></li>
     <span class="k">return</span> <span class="n">lista</span></div>
 
 
-<span class="k">def</span> <span class="nf">wgs84_a_utm</span><span class="p">(</span><span class="n">path_gws84</span><span class="p">,</span> <span class="n">path_utm</span><span class="p">,</span> <span class="n">zona_norte</span><span class="p">):</span>
+<div class="viewcode-block" id="wgs84_a_utm"><a class="viewcode-back" href="../libreria_apc.html#apc.wgs84_a_utm">[documentos]</a><span class="k">def</span> <span class="nf">wgs84_a_utm</span><span class="p">(</span><span class="n">path_gws84</span><span class="p">,</span> <span class="n">path_utm</span><span class="p">,</span> <span class="n">zona_norte</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Esta función reproyecta una capa que su sistema de referencía es WGS84 a</span>
+<span class="sd">    UTM</span>
+<span class="sd">    </span>
+<span class="sd">    :param path_wgs84: Ruta de la capa vectorial</span>
+<span class="sd">    :type path _wgs84: String</span>
+<span class="sd">    </span>
+<span class="sd">    :param path_utm: Ruta con nombre de la nueva capa reproyectada en UTM</span>
+<span class="sd">    :param path_utm: String</span>
+<span class="sd">    </span>
+<span class="sd">    :param zona_norte: Número de zona UTM que le corresponde</span>
+<span class="sd">    :type zona_norte: Int</span>
+<span class="sd">    </span>
+<span class="sd">    .. Note::</span>
+
+<span class="sd">       Las zonas UTM para México son :</span>
+<span class="sd">       </span>
+<span class="sd">       ==== =================</span>
+<span class="sd">       Zona Meridiano central</span>
+<span class="sd">       ==== =================</span>
+<span class="sd">       11   87°W</span>
+<span class="sd">       12   93°W</span>
+<span class="sd">       13   99°W</span>
+<span class="sd">       14   105°W</span>
+<span class="sd">       15   111°W</span>
+<span class="sd">       16   117°W</span>
+<span class="sd">       ==== =================</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
 
     <span class="n">vlayer</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="n">path_gws84</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;ogr&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">zona_norte</span><span class="o">==</span><span class="mi">11</span><span class="p">:</span>
         <span class="n">crs</span> <span class="o">=</span> <span class="n">QgsCoordinateReferenceSystem</span><span class="p">(</span><span class="s2">&quot;EPSG:32611&quot;</span><span class="p">)</span>
         <span class="n">proyecta</span> <span class="o">=</span> <span class="n">QgsVectorFileWriter</span><span class="o">.</span><span class="n">writeAsVectorFormat</span><span class="p">(</span><span class="n">vlayer</span><span class="p">,</span>
-                                                           <span class="n">path_utm16n</span><span class="p">,</span>
+                                                           <span class="n">path_utm</span><span class="p">,</span>
                                                            <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span>
                                                            <span class="n">crs</span><span class="p">,</span>
                                                            <span class="s2">&quot;ESRI Shapefile&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">zona_norte</span><span class="o">==</span><span class="mi">12</span><span class="p">:</span>
         <span class="n">crs</span> <span class="o">=</span> <span class="n">QgsCoordinateReferenceSystem</span><span class="p">(</span><span class="s2">&quot;EPSG:32612&quot;</span><span class="p">)</span>
         <span class="n">proyecta</span> <span class="o">=</span> <span class="n">QgsVectorFileWriter</span><span class="o">.</span><span class="n">writeAsVectorFormat</span><span class="p">(</span><span class="n">vlayer</span><span class="p">,</span>
-                                                           <span class="n">path_utm16n</span><span class="p">,</span>
+                                                           <span class="n">path_utm</span><span class="p">,</span>
                                                            <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span>
                                                            <span class="n">crs</span><span class="p">,</span>
                                                            <span class="s2">&quot;ESRI Shapefile&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">zona_norte</span><span class="o">==</span><span class="mi">13</span><span class="p">:</span>
         <span class="n">crs</span> <span class="o">=</span> <span class="n">QgsCoordinateReferenceSystem</span><span class="p">(</span><span class="s2">&quot;EPSG:32613&quot;</span><span class="p">)</span>
         <span class="n">proyecta</span> <span class="o">=</span> <span class="n">QgsVectorFileWriter</span><span class="o">.</span><span class="n">writeAsVectorFormat</span><span class="p">(</span><span class="n">vlayer</span><span class="p">,</span>
-                                                           <span class="n">path_utm16n</span><span class="p">,</span>
+                                                           <span class="n">path_utm</span><span class="p">,</span>
                                                            <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span>
                                                            <span class="n">crs</span><span class="p">,</span>
                                                            <span class="s2">&quot;ESRI Shapefile&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">zona_norte</span><span class="o">==</span><span class="mi">14</span><span class="p">:</span>
         <span class="n">crs</span> <span class="o">=</span> <span class="n">QgsCoordinateReferenceSystem</span><span class="p">(</span><span class="s2">&quot;EPSG:32614&quot;</span><span class="p">)</span>
         <span class="n">proyecta</span> <span class="o">=</span> <span class="n">QgsVectorFileWriter</span><span class="o">.</span><span class="n">writeAsVectorFormat</span><span class="p">(</span><span class="n">vlayer</span><span class="p">,</span>
-                                                           <span class="n">path_utm16n</span><span class="p">,</span>
+                                                           <span class="n">path_utm</span><span class="p">,</span>
                                                            <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span>
                                                            <span class="n">crs</span><span class="p">,</span>
                                                            <span class="s2">&quot;ESRI Shapefile&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">zona_norte</span><span class="o">==</span><span class="mi">15</span><span class="p">:</span>
         <span class="n">crs</span> <span class="o">=</span> <span class="n">QgsCoordinateReferenceSystem</span><span class="p">(</span><span class="s2">&quot;EPSG:32615&quot;</span><span class="p">)</span>
         <span class="n">proyecta</span> <span class="o">=</span> <span class="n">QgsVectorFileWriter</span><span class="o">.</span><span class="n">writeAsVectorFormat</span><span class="p">(</span><span class="n">vlayer</span><span class="p">,</span>
-                                                           <span class="n">path_utm16n</span><span class="p">,</span>
+                                                           <span class="n">path_utm</span><span class="p">,</span>
                                                            <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span>
                                                            <span class="n">crs</span><span class="p">,</span>
                                                            <span class="s2">&quot;ESRI Shapefile&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">zona_norte</span><span class="o">==</span><span class="mi">16</span><span class="p">:</span>
         <span class="n">crs</span> <span class="o">=</span> <span class="n">QgsCoordinateReferenceSystem</span><span class="p">(</span><span class="s2">&quot;EPSG:32616&quot;</span><span class="p">)</span>
         <span class="n">proyecta</span> <span class="o">=</span> <span class="n">QgsVectorFileWriter</span><span class="o">.</span><span class="n">writeAsVectorFormat</span><span class="p">(</span><span class="n">vlayer</span><span class="p">,</span>
-                                                           <span class="n">path_utm16n</span><span class="p">,</span>
+                                                           <span class="n">path_utm</span><span class="p">,</span>
                                                            <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span>
                                                            <span class="n">crs</span><span class="p">,</span>
                                                            <span class="s2">&quot;ESRI Shapefile&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;error en el numero de zona&quot;</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;error en el numero de zona&quot;</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">proy_a_wgs84</span><span class="p">(</span><span class="n">path_capa</span><span class="p">,</span> <span class="n">path_wgs84</span><span class="p">):</span>
@@ -589,60 +672,61 @@ output: html_document</a></li>
                                                        <span class="s2">&quot;ESRI Shapefile&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="lista_archivos"><a class="viewcode-back" href="../libreria_apc.html#apc.lista_archivos">[documentos]</a><span class="k">def</span> <span class="nf">lista_archivos</span><span class="p">(</span><span class="n">lista_a</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">path_d</span><span class="p">,</span> <span class="n">folders_check</span><span class="p">,</span> <span class="n">tipo_ext</span><span class="p">):</span>
+<div class="viewcode-block" id="lista_archivos"><a class="viewcode-back" href="../libreria_apc.html#apc.lista_archivos">[documentos]</a><span class="k">def</span> <span class="nf">lista_archivos</span><span class="p">(</span><span class="n">path_carpeta</span><span class="p">,</span><span class="n">extension</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Esta funcion recursiva regresa una lista que contiene los</span>
-<span class="sd">    archivos contenidos en un directorio segun el tipo de extension declarado.</span>
+<span class="sd">    Esta funcion regresa una lista que contiene los</span>
+<span class="sd">    archivos contenidos en un directorio segun el tipo de extensión declarado.</span>
 
 <span class="sd">    Parametros:</span>
-<span class="sd">        lista_a=[]</span>
-<span class="sd">        path= ruta de la carpeta (primer nivel) que contiene los archivos</span>
-<span class="sd">        path_d= ruta de la carpeta (primer nivel) que contiene los archivos</span>
-<span class="sd">        folders_check= []</span>
-<span class="sd">        tipo_ext= se especifica la extension del archivo</span>
+<span class="sd">    :param path_carpeta: Ruta de la carpeta que contiene los datos</span>
+<span class="sd">    :type path_carpeta: String</span>
+<span class="sd">    </span>
+<span class="sd">    :param extension: tipo de extensión, agregar un . al inicio ej &#39;.tif&#39;</span>
+<span class="sd">    :type extension: String </span>
+<span class="sd">    </span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
 <span class="sd">        ejemplo:</span>
-<span class="sd">        lista_shapes=apc.lista_archivos([],path_sig,path_sig,[],&quot;shp&quot;)</span>
+<span class="sd">        lista_shapes=apc.lista_archivos(path_sig,&#39;.shp&#39;)</span>
+<span class="sd">    </span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">lista_tipo_ext</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">path_d</span> <span class="o">!=</span> <span class="n">path</span><span class="p">):</span>
-        <span class="n">folders_check</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_d</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path_d</span><span class="p">):</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">path_d</span> <span class="o">+</span> <span class="n">f</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="ow">and</span> <span class="n">d</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">folders_check</span><span class="p">:</span>
-            <span class="n">lista_archivos</span><span class="p">(</span><span class="n">lista_a</span><span class="p">,</span>
-                           <span class="n">path</span><span class="p">,</span>
-                           <span class="n">d</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span>
-                           <span class="n">folders_check</span><span class="p">,</span>
-                           <span class="n">tipo_ext</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-                <span class="n">lista_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_d</span><span class="o">+</span><span class="n">f</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">archivo</span> <span class="ow">in</span> <span class="n">lista_a</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">archivo</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">tipo_ext</span><span class="p">):</span>
-            <span class="n">lista_tipo_ext</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">archivo</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">lista_tipo_ext</span></div>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path_carpeta</span><span class="p">):</span>
+        <span class="n">lista</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">extension</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">extension</span><span class="p">:</span>
+                <span class="n">lista</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">extension</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lista</span></div>
 
 
 <div class="viewcode-block" id="nombre_archivo"><a class="viewcode-back" href="../libreria_apc.html#apc.nombre_archivo">[documentos]</a><span class="k">def</span> <span class="nf">nombre_archivo</span><span class="p">(</span><span class="n">ruta</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Esta funcion extrae de la ruta el nombre del archivo shapefile</span>
+<span class="sd">    Esta funcion extrae de la ruta el nombre del archivo shapefile sin extensión</span>
 <span class="sd">    Parametros:</span>
-<span class="sd">        ruta = ruta de la capa shapefile</span>
+<span class="sd">    </span>
+<span class="sd">    :param ruta: ruta de la capa shapefile</span>
+<span class="sd">    :type ruta: String</span>
+<span class="sd">    </span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">nombre_cort</span> <span class="o">=</span> <span class="n">ruta</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">nombre_cort</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">nombre</span></div>
 
 
-<div class="viewcode-block" id="validacion_prj"><a class="viewcode-back" href="../libreria_apc.html#apc.validacion_prj">[documentos]</a><span class="k">def</span> <span class="nf">validacion_prj</span><span class="p">(</span><span class="n">lista_paths</span><span class="p">):</span>
+<div class="viewcode-block" id="validacion_prj"><a class="viewcode-back" href="../libreria_apc.html#apc.validacion_prj">[documentos]</a><span class="k">def</span> <span class="nf">validacion_prj</span><span class="p">(</span><span class="n">path_carpeta</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Esta función recibe una carpeta que contenga los archivos shapefile</span>
+<span class="sd">    y verifica que para cada archivo shapefile exista un archivo prj,</span>
+<span class="sd">    Regresa en una lista los archivos que no cumplen con esta condición </span>
 <span class="sd">    Parametros:</span>
 
-<span class="sd">        lista_paths=ruta donde se encuentran los archivos shapefile</span>
+<span class="sd">    :param path_carpeta: ruta donde se encuentran los archivos shapefile</span>
+<span class="sd">    :type path_carpeta: String</span>
+<span class="sd">    </span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">sin_proj</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">lista_shp</span> <span class="o">=</span> <span class="n">lista_archivos</span><span class="p">([],</span> <span class="n">lista_paths</span><span class="p">,</span> <span class="n">lista_paths</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;shp&quot;</span><span class="p">)</span>
-    <span class="n">lista_prj</span> <span class="o">=</span> <span class="n">lista_archivos</span><span class="p">([],</span> <span class="n">lista_paths</span><span class="p">,</span> <span class="n">lista_paths</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;prj&quot;</span><span class="p">)</span>
+    <span class="n">lista_shp</span> <span class="o">=</span> <span class="n">lista_archivos</span><span class="p">(</span><span class="n">path_carpeta</span><span class="p">,</span> <span class="s2">&quot;shp&quot;</span><span class="p">)</span>
+    <span class="n">lista_prj</span> <span class="o">=</span> <span class="n">lista_archivos</span><span class="p">(</span><span class="n">path_carpeta</span><span class="p">,</span> <span class="s2">&quot;prj&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">arch_shape</span> <span class="ow">in</span> <span class="n">lista_shp</span><span class="p">:</span>
         <span class="n">capa</span> <span class="o">=</span> <span class="n">arch_shape</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -656,7 +740,7 @@ output: html_document</a></li>
     <span class="k">return</span> <span class="n">sin_proj</span></div>
 
 
-<span class="k">def</span> <span class="nf">extension_capa</span><span class="p">(</span><span class="n">path_capa</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">extension_capa</span><span class="p">(</span><span class="n">path_capa</span><span class="p">):</span> <span class="c1">#subfunción de crear_metadatos</span>
     <span class="n">vlayer</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="n">path_capa</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;ogr&quot;</span><span class="p">)</span>
     <span class="n">lista</span><span class="o">=</span><span class="p">[]</span>
     <span class="k">if</span> <span class="n">vlayer</span><span class="o">.</span><span class="n">crs</span><span class="p">()</span><span class="o">.</span><span class="n">authid</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;EPSG:4326&quot;</span><span class="p">:</span>
@@ -693,24 +777,27 @@ output: html_document</a></li>
 
     <span class="k">return</span> <span class="n">lista</span>
 
-<span class="k">def</span> <span class="nf">borrar_shape</span><span class="p">(</span><span class="n">ruta_shape</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">borrar_shape</span><span class="p">(</span><span class="n">ruta_shape</span><span class="p">):</span> <span class="c1">#subfunción</span>
     <span class="n">path_dir</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ruta_shape</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
     <span class="n">lista_archivos</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path_dir</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">archivo</span> <span class="ow">in</span> <span class="n">lista_archivos</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">archivo</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">nombre_archivo</span><span class="p">(</span><span class="n">ruta_shape</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path_dir</span><span class="o">+</span><span class="n">archivo</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">clean_var</span><span class="p">(</span><span class="n">nombre_var</span><span class="p">):</span>
-    <span class="n">gl</span><span class="o">=</span><span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">gl</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">var</span> <span class="o">==</span> <span class="n">nombre_var</span><span class="p">:</span>
-            <span class="k">del</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">var</span><span class="p">]</span>
 
-<span class="k">def</span> <span class="nf">extension_vector</span><span class="p">(</span><span class="n">ruta_capa</span><span class="p">):</span>
+<div class="viewcode-block" id="extension_vector"><a class="viewcode-back" href="../libreria_apc.html#apc.extension_vector">[documentos]</a><span class="k">def</span> <span class="nf">extension_vector</span><span class="p">(</span><span class="n">ruta_capa</span><span class="p">):</span> <span class="c1">#subfunción</span>
+    <span class="sd">&#39;&#39;&#39;Esta función regresa una lista con las coordendas de la extensión </span>
+<span class="sd">    geográfica de la capa.</span>
+<span class="sd">    </span>
+<span class="sd">    :param ruta_capa: ruta de la capa vectorial en formato shapefile</span>
+<span class="sd">    :type ruta_capa: String</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">ruta</span><span class="o">=</span> <span class="n">extension_capa</span><span class="p">(</span><span class="n">ruta_capa</span><span class="p">)</span>
-    <span class="n">borrar_shape</span><span class="p">(</span><span class="n">ruta</span><span class="p">)</span>
+    <span class="n">borrar_shape</span><span class="p">(</span><span class="n">ruta</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">campos_md</span><span class="p">(</span><span class="n">ruta_shape</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">campos_md</span><span class="p">(</span><span class="n">ruta_shape</span><span class="p">):</span> <span class="c1">#subfunción</span>
     <span class="n">layer</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="n">ruta_shape</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;ogr&quot;</span><span class="p">)</span>
     <span class="n">nuevo_path</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ruta_shape</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
     <span class="n">nombre</span><span class="o">=</span><span class="s2">&quot;md_&quot;</span><span class="o">+</span><span class="n">nombre_archivo</span><span class="p">(</span><span class="n">ruta_shape</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;.md&quot;</span>
@@ -719,7 +806,10 @@ output: html_document</a></li>
     <span class="n">archivo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Campo | Tipo | Descripción </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">archivo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;--- | --- | --- |</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="n">campos</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot; | &quot;</span><span class="o">+</span><span class="n">field</span><span class="o">.</span><span class="n">typeName</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">fields</span><span class="p">()]</span>
+    <span class="n">campos</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+              <span class="o">+</span><span class="s2">&quot; | &quot;</span> 
+              <span class="o">+</span> <span class="n">field</span><span class="o">.</span><span class="n">typeName</span><span class="p">()</span> 
+              <span class="o">+</span> <span class="s2">&quot; | &quot;</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">fields</span><span class="p">()]</span>
 
     <span class="k">for</span> <span class="n">campo</span> <span class="ow">in</span> <span class="n">campos</span><span class="p">:</span>
         <span class="n">archivo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">campo</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -793,13 +883,26 @@ output: html_document</a></li>
 
                 <span class="k">if</span>  <span class="ow">not</span> <span class="n">feature</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()]</span> <span class="o">==</span> <span class="n">NULL</span><span class="p">:</span>
                     <span class="n">lista</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()])</span>
-
-
-            <span class="c1">#print field.name(),&quot; | &quot;,field.typeName(),&quot; | &quot;,&quot; | &quot;,min(lista),&quot;-&quot;,max(lista),&quot;\n&quot;</span>
-            <span class="n">archivo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot; | &quot;</span><span class="o">+</span><span class="n">field</span><span class="o">.</span><span class="n">typeName</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot; | &quot;</span><span class="o">+</span><span class="s2">&quot; | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">lista</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; - &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">lista</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; | &quot;</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+           
+            <span class="n">archivo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+                          <span class="o">+</span> <span class="s2">&quot; | &quot;</span> 
+                          <span class="o">+</span> <span class="n">field</span><span class="o">.</span><span class="n">typeName</span><span class="p">()</span>
+                          <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+                          <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+                          <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">lista</span><span class="p">))</span>
+                          <span class="o">+</span> <span class="s2">&quot; - &quot;</span>
+                          <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">lista</span><span class="p">))</span>
+                          <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+                          <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1">#print field.name(),&quot; | &quot;,field.typeName(),&quot; | &quot;,&quot; | &quot;,&quot; &quot;,&quot;\n&quot;</span>
-            <span class="n">archivo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot; | &quot;</span><span class="o">+</span><span class="n">field</span><span class="o">.</span><span class="n">typeName</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot; | &quot;</span><span class="o">+</span><span class="s2">&quot; | &quot;</span><span class="o">+</span><span class="s2">&quot; |&quot;</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">archivo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+                          <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+                          <span class="o">+</span> <span class="n">field</span><span class="o">.</span><span class="n">typeName</span><span class="p">()</span>
+                          <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+                          <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+                          <span class="o">+</span> <span class="s2">&quot; |&quot;</span> 
+                          <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
 
@@ -809,13 +912,22 @@ output: html_document</a></li>
     <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;metadatos creados&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ruta_temp</span>
 
-<span class="k">def</span> <span class="nf">crear_metadatos</span><span class="p">(</span><span class="n">ruta_shape</span><span class="p">):</span>
+<div class="viewcode-block" id="crear_metadatos"><a class="viewcode-back" href="../libreria_apc.html#apc.crear_metadatos">[documentos]</a><span class="k">def</span> <span class="nf">crear_metadatos</span><span class="p">(</span><span class="n">ruta_shape</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Esta función generá un archivo MD que contiene la ruta, extensión geográfica </span>
+<span class="sd">    , nombre de campos y tipo, rango (en caso de aplicar). elementos básicos</span>
+<span class="sd">    para la generación de metadatos en geonetwork. </span>
+<span class="sd">    </span>
+<span class="sd">    :param ruta_shape: ruta de la capa vectorial en formato shapefile</span>
+<span class="sd">    :type ruta_shape: String</span>
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">capa</span> <span class="o">=</span> <span class="n">metadatos</span><span class="p">(</span><span class="n">ruta_shape</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">capa</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
         <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;se ha creado el archivo md en el direcctorio&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">borrar_shape</span><span class="p">(</span><span class="n">capa</span><span class="p">)</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;se ha creado el archivo md en el direcctorio&quot;</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;se ha creado el archivo md en el direcctorio&quot;</span><span class="p">)</span></div>
 
 <span class="k">def</span> <span class="nf">campos_minusculas</span><span class="p">(</span><span class="n">path_shape</span><span class="p">):</span>
     <span class="n">layer</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="n">path_shape</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;ogr&quot;</span><span class="p">)</span>
@@ -839,7 +951,7 @@ output: html_document</a></li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Víctor Hernández
+        &copy; Copyright 2019, Victor Hernandez
 
     </p>
   </div>

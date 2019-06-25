@@ -16,8 +16,8 @@ presiona enter y escribe el siguiente comando
 Se muestra la ruta donde tendrá que ser copiado el archivo ``apc.py``
 el cual es la biblioteca de funciones de python y qgis  :
 
-.. image:: /imagenes/ruta.jpg
-   :alt: alternate text
+.. image:: /imagenes/ruta.JPG
+   :alt: ruta
 
 existe un archivo llamado ``copia.bat`` el cual es un archivo por
 lotes para windows, se tiene que modificar la ruta de donde se tiene

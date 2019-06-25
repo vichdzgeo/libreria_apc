@@ -89,7 +89,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="estilo.html">Estilo de código en python</a></li>
-<li class="toctree-l1"><a class="reference internal" href="procesamiento.html">Sitios prioritarios marinos de Yucatán.</a></li>
 </ul>
 
             
@@ -177,12 +176,7 @@ poligono en hectareas Parametros:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
-<li><strong>path_vector</strong> – <dl class="docutils">
-<dt>ruta de la capa vectorial, debe estar en una</dt>
-<dd>proyeccion cartografica que exrprese sun unidades</dd>
-</dl>
-<p>lineales, ej: UTM14N o CCL</p>
-</li>
+<li><strong>path_vector</strong> (<em>String</em>) – ruta de la capa vectorial, debe estar en una                         proyeccion cartografica que exrprese sus unidades                         lineales, ej: UTM14N o CCL</li>
 <li><strong>nombre_campo</strong> (<em>string</em>) – ingresar el nombre del campo ej: area_ha</li>
 </ul>
 </td>
@@ -201,8 +195,8 @@ poligono en kilometros cuadrados.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
-<li><strong>path_vector</strong> – ruta de la capa vectorial, debe estar en una proyeccion
-cartografica que exrprese sun unidades lineales,
+<li><strong>path_vector</strong> (<em>String</em>) – ruta de la capa vectorial, debe estar en una proyeccion
+cartografica que exrprese sus unidades lineales,
 ej: UTM14N o CCL</li>
 <li><strong>nombre_campo</strong> (<em>string</em>) – ingresar el nombre del campo ej: area_km2</li>
 </ul>
@@ -215,126 +209,228 @@ ej: UTM14N o CCL</li>
 <dl class="function">
 <dt id="apc.colonia_ageb">
 <code class="descclassname">apc.</code><code class="descname">colonia_ageb</code><span class="sig-paren">(</span><em>path_salida</em>, <em>path_agebs</em>, <em>path_colonias</em>, <em>ageb_id</em>, <em>col_id</em>, <em>campos_resampling</em>, <em>nombre_temp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#colonia_ageb"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.colonia_ageb" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Parametros:
-path_salida = Ruta de la salida de los datos
-path_agebs = ruta de la capa de agebs
-path_colonias =  ruta de la capa de colonias
-ageb_id = nombre del campo de id de los agebs
-col_id = nombre del campo de id de la colonia
-campos_resampling = nombre de los campos
-nombre_temp = nombre del archivo que se genera al intersectar la copia de
-colonias con la de agebs</p>
+<dd><p>Esta función realiza un escalamiento de datos que estan a nivel geométrico
+de colonía y los pasa a nivel de ageb.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path_salida</strong> (<em>String</em>) – Ruta de la salida de la capa a nivel de ageb</li>
+<li><strong>path_agebs</strong> (<em>String</em>) – ruta de la capa de agebs</li>
+<li><strong>path_colonias</strong> (<em>String</em>) – ruta de la capa de colonias</li>
+<li><strong>ageb_id</strong> (<em>String</em>) – nombre del campo de id de los agebs</li>
+<li><strong>col_id</strong> (<em>String</em>) – nombre del campo de id de la colonia</li>
+<li><strong>campos_resampling</strong> (<em>List the strings</em>) – nombre de los campos de la cap de colonia</li>
+<li><strong>nombre_temp</strong> (<em>String</em>) – nombre del archivo que se genera al intersectar la                         copia de colonias con la de agebs</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="apc.crear_campo">
 <code class="descclassname">apc.</code><code class="descname">crear_campo</code><span class="sig-paren">(</span><em>path_vector</em>, <em>nombre_campo</em>, <em>tipo</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#crear_campo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.crear_campo" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Crear_campo(path_vector,nombre_campo,tipo)
-Esta funcion crea un campo segun el tipo especificado.
-Parametros:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>path_vector: La ruta del archivo shapefile al cual se le quiere</dt>
-<dd>agregar el campo</dd>
-</dl>
-<p>nombre_campo: Nombre del campo nuevo
-tipo: es el tipo de campo que se quiere crear:
-Int: para crear un campo tipo entero
+<dd><p>Esta funcion crea un campo segun el tipo especificado.
+Parametros:
+:param path_vector: La ruta del archivo shapefile al cual se le quiere                         agregar el campo
+:type path_vector: String</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nombre_campo</strong> (<em>Sting</em>) – Nombre del campo nuevo</li>
+<li><strong>tipo</strong> – es el tipo de campo que se quiere crear</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Int: para crear un campo tipo entero
 Double: para crear un campo tipo doble o flotante
 String: para crear un campo tipo texto
-Date: para crear un campo tipo fecha</p>
-</div></blockquote>
+Date: para crear un campo tipo fecha
+:type tipo: String</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apc.crear_metadatos">
+<code class="descclassname">apc.</code><code class="descname">crear_metadatos</code><span class="sig-paren">(</span><em>ruta_shape</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#crear_metadatos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.crear_metadatos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta función generá un archivo MD que contiene la ruta, extensión geográfica 
+, nombre de campos y tipo, rango (en caso de aplicar). elementos básicos
+para la generación de metadatos en geonetwork.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>ruta_shape</strong> (<em>String</em>) – ruta de la capa vectorial en formato shapefile</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="apc.est_raster_media">
 <code class="descclassname">apc.</code><code class="descname">est_raster_media</code><span class="sig-paren">(</span><em>path_vector</em>, <em>path_raster</em>, <em>nombre_campo</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#est_raster_media"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.est_raster_media" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Esta funcion calcula la media de los valores de pixel
-contenidos en un raster sobreponiendo una capa vectorial de poligonos
-Parametros:</p>
-<blockquote>
-<div>path_vector = ruta de la capa que contendra los datos extraidos del archivo raster
-path_raster = ruta de la capa raster de la cual se extraera el valor
-nombre_campo = nombre del campo que se creara para agregar los valores de la capa
-raster a la capa vectorial</div></blockquote>
+<dd><p>Esta funcion calcula la media de los valores de pixel de un raster
+contenidos en un área superpuesta de una capa vectorial.</p>
+<p>Parametros:
+:param path_vector: ruta de la capa que contendra los datos extraidos del                         archivo raster
+:type path_vector:String</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path_raster</strong> (<em>String</em>) – ruta de la capa raster de la cual se extraera el valor</li>
+<li><strong>nombre_campo</strong> (<em>String</em>) – nombre del campo que se creara para agregar los                          valores de la capa raster a la capa vectorial</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="apc.extension_vector">
+<code class="descclassname">apc.</code><code class="descname">extension_vector</code><span class="sig-paren">(</span><em>ruta_capa</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#extension_vector"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.extension_vector" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta función regresa una lista con las coordendas de la extensión 
+geográfica de la capa.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>ruta_capa</strong> (<em>String</em>) – ruta de la capa vectorial en formato shapefile</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="apc.lista_archivos">
-<code class="descclassname">apc.</code><code class="descname">lista_archivos</code><span class="sig-paren">(</span><em>lista_a</em>, <em>path</em>, <em>path_d</em>, <em>folders_check</em>, <em>tipo_ext</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#lista_archivos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.lista_archivos" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Esta funcion recursiva regresa una lista que contiene los
-archivos contenidos en un directorio segun el tipo de extension declarado.</p>
-<dl class="docutils">
-<dt>Parametros:</dt>
-<dd>lista_a=[]
-path= ruta de la carpeta (primer nivel) que contiene los archivos
-path_d= ruta de la carpeta (primer nivel) que contiene los archivos
-folders_check= []
-tipo_ext= se especifica la extension del archivo
-ejemplo:
-lista_shapes=apc.lista_archivos([],path_sig,path_sig,[],»shp»)</dd>
-</dl>
+<code class="descclassname">apc.</code><code class="descname">lista_archivos</code><span class="sig-paren">(</span><em>path_carpeta</em>, <em>extension</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#lista_archivos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.lista_archivos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta funcion regresa una lista que contiene los
+archivos contenidos en un directorio segun el tipo de extensión declarado.</p>
+<p>Parametros:
+:param path_carpeta: Ruta de la carpeta que contiene los datos
+:type path_carpeta: String</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>extension</strong> (<em>String</em>) – tipo de extensión, agregar un . al inicio ej “.tif”</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ejemplo</span><span class="p">:</span>
+<span class="n">lista_shapes</span><span class="o">=</span><span class="n">apc</span><span class="o">.</span><span class="n">lista_archivos</span><span class="p">(</span><span class="n">path_sig</span><span class="p">,</span><span class="s1">&#39;.shp&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="apc.lista_shp">
 <code class="descclassname">apc.</code><code class="descname">lista_shp</code><span class="sig-paren">(</span><em>path_carpeta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#lista_shp"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.lista_shp" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Parametros:</dt>
-<dd>path_carpeta = ruta que contiene los archivos shape a procesar</dd>
-</dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>path_carpeta</strong> (<em>String</em>) – ruta que contiene los archivos shape a procesar</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="apc.nombre_archivo">
 <code class="descclassname">apc.</code><code class="descname">nombre_archivo</code><span class="sig-paren">(</span><em>ruta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#nombre_archivo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.nombre_archivo" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Esta funcion extrae de la ruta el nombre del archivo shapefile
+<dd><p>Esta funcion extrae de la ruta el nombre del archivo shapefile sin extensión
 Parametros:</p>
-<blockquote>
-<div>ruta = ruta de la capa shapefile</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>ruta</strong> (<em>String</em>) – ruta de la capa shapefile</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="apc.raster_poligono">
 <code class="descclassname">apc.</code><code class="descname">raster_poligono</code><span class="sig-paren">(</span><em>path_tif</em>, <em>path_s_vector</em>, <em>nombre_campo</em>, <em>epsg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#raster_poligono"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.raster_poligono" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Realiza el proceso de vectorizacion de una capa raster
+<dd><p>Realiza el proceso de vectorización de una capa raster
 Parametros:</p>
-<blockquote>
-<div>path_tif= ruta de la capa raster
-path_s_vector= ruta de salida de la capa vectorial
-nombre_campo= nombre de un nuevo campo que contiene los valores de pixel
-epsg:</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path_tif</strong> (<em>String</em>) – ruta de la capa raster</li>
+<li><strong>path_s_vector</strong> (<em>String</em>) – ruta de salida de la capa vectorial</li>
+<li><strong>nombre_campo</strong> (<em>String</em>) – nombre de un nuevo campo que contiene los valores                          de pixel</li>
+<li><strong>epsg</strong> (<em>Int</em>) – Código EPSG para la zona 14N UTM con datum WGS84 el                  código es 32614</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="apc.union_csv_shape">
 <code class="descclassname">apc.</code><code class="descname">union_csv_shape</code><span class="sig-paren">(</span><em>path_csv</em>, <em>path_vector</em>, <em>n_campo_comun</em>, <em>path_salida</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#union_csv_shape"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.union_csv_shape" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Funcion para unir una base de datos csv a un archivo shapefile, por medio de un campo en comun.
-El resultado es una nueva capa vectorial con la union tabular.
+<dd><p>Función para unir una base de datos csv a un archivo shapefile,         por medio de un campo en común.
+El resultado es una nueva capa vectorial con la unión tabular.
 Parametros:</p>
-<blockquote>
-<div>path_csv = ruta del archivo csv, usar / en vez de “”
-path_vector = ruta de la capa vectorial
-n_campo_comun = nombre del campo en comun
-path_salida = ruta de salida para la nueva capa vectorial que contiene la union</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path_csv</strong> (<em>String</em>) – ruta del archivo csv.</li>
+<li><strong>path_vector</strong> (<em>String</em>) – ruta de la capa vectorial</li>
+<li><strong>n_campo_comun</strong> (<em>String</em>) – nombre del campo en comun</li>
+<li><strong>path_salida</strong> (<em>String</em>) – ruta de salida para la nueva capa vectorial que                             contiene la union</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">Advertencia</p>
+<p class="last">Para el separador de directorios en la ruta usar «/»</p>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="apc.v_cortar">
 <code class="descclassname">apc.</code><code class="descname">v_cortar</code><span class="sig-paren">(</span><em>path_mask</em>, <em>path_zona</em>, <em>path_salida</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#v_cortar"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.v_cortar" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Esta funcion permite cortar dos capas vectoriales
+<dd><p>Esta función permite cortar dos capas vectoriales
 Parametros:</p>
-<blockquote>
-<div>path_mask= capa vectorial que sirve como mascara de recorte.
-path_zona= capa vectorial de la capa a recortar.
-path_salida= ruta de la capa generada por el proceso.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path_mask</strong> (<em>String</em>) – ruta de la capa vectorial que sirve como mascara de corte.</li>
+<li><strong>path_zona</strong> – ruta de la capa vectorial de la capa a cortar.</li>
+<li><strong>path_salida</strong> – ruta de la capa generada por el proceso.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="apc.v_interseccion">
 <code class="descclassname">apc.</code><code class="descname">v_interseccion</code><span class="sig-paren">(</span><em>vector_a</em>, <em>vector_b</em>, <em>path_s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#v_interseccion"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.v_interseccion" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Esta funcion calcula la interseccion geometrica de las capas poligonales
-superpuestas es decir, vector_a y vector_b</p>
+<dd><p>Esta funcion calcula la interseccion  de dos capas vectoriales es decir,
+vector_a y vector_b</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -352,10 +448,19 @@ superpuestas es decir, vector_a y vector_b</p>
 
 <dl class="function">
 <dt id="apc.validacion_prj">
-<code class="descclassname">apc.</code><code class="descname">validacion_prj</code><span class="sig-paren">(</span><em>lista_paths</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#validacion_prj"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.validacion_prj" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Parametros:</p>
-<blockquote>
-<div>lista_paths=ruta donde se encuentran los archivos shapefile</div></blockquote>
+<code class="descclassname">apc.</code><code class="descname">validacion_prj</code><span class="sig-paren">(</span><em>path_carpeta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#validacion_prj"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.validacion_prj" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta función recibe una carpeta que contenga los archivos shapefile
+y verifica que para cada archivo shapefile exista un archivo prj,
+Regresa en una lista los archivos que no cumplen con esta condición 
+Parametros:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>path_carpeta</strong> (<em>String</em>) – ruta donde se encuentran los archivos shapefile</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -368,13 +473,69 @@ la capa es creada con el mismo sistema de referencia que el origen.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
-<li><strong>path_vector</strong> – ruta de la capa original</li>
-<li><strong>path_salida</strong> – ruta de donde sera almacenada la capa</li>
+<li><strong>path_vector</strong> (<em>String</em>) – ruta de la capa original</li>
+<li><strong>path_salida</strong> (<em>String</em>) – ruta de donde sera almacenada la capa</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="apc.wgs84_a_utm">
+<code class="descclassname">apc.</code><code class="descname">wgs84_a_utm</code><span class="sig-paren">(</span><em>path_gws84</em>, <em>path_utm</em>, <em>zona_norte</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apc.html#wgs84_a_utm"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#apc.wgs84_a_utm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta función reproyecta una capa que su sistema de referencía es WGS84 a
+UTM</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path_wgs84</strong> – Ruta de la capa vectorial</li>
+<li><strong>path_utm</strong> – Ruta con nombre de la nueva capa reproyectada en UTM</li>
+<li><strong>path_utm</strong> – String</li>
+<li><strong>zona_norte</strong> (<em>Int</em>) – Número de zona UTM que le corresponde</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p>Las zonas UTM para México son :</p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Zona</th>
+<th class="head">Meridiano central</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>11</td>
+<td>87°W</td>
+</tr>
+<tr class="row-odd"><td>12</td>
+<td>93°W</td>
+</tr>
+<tr class="row-even"><td>13</td>
+<td>99°W</td>
+</tr>
+<tr class="row-odd"><td>14</td>
+<td>105°W</td>
+</tr>
+<tr class="row-even"><td>15</td>
+<td>111°W</td>
+</tr>
+<tr class="row-odd"><td>16</td>
+<td>117°W</td>
+</tr>
+</tbody>
+</table>
+</div>
 </dd></dl>
 
 </div>
@@ -400,7 +561,7 @@ la capa es creada con el mismo sistema de referencia que el origen.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Víctor Hernández
+        &copy; Copyright 2019, Victor Hernandez
 
     </p>
   </div>

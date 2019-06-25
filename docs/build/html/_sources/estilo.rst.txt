@@ -145,7 +145,7 @@ Ejemplo
 
   def v_interseccion(vector_a, vector_b, path_s):
     '''
-    Esta funcion calcula la interseccion geometrica de las capas poligonales
+    Esta funcion calcula la interseccion  de las capas vectoriales
     superpuestas es decir, vector_a y vector_b
 
     :param vector_a: Ruta o path de la capa A

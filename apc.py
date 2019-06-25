@@ -7,6 +7,8 @@ from os.path import join
 from PyQt4.QtCore import *
 from osgeo import gdal, ogr, osr
 import os
+import sys
+sys.path.append("/usr/share/qgis/python/plugins/")
 import processing as pr
 import time
 
@@ -24,8 +26,8 @@ import time
 def v_interseccion(vector_a, vector_b, path_s):
     '''
     v_interseccion(vector_a,vector_b,path_s)
-    Esta funcion calcula la interseccion geometrica de las capas poligonales
-    superpuestas es decir, vector_a y vector_b
+    Esta funcion calcula la interseccion  de dos capas vectoriales es decir,
+    vector_a y vector_b
 
     :param vector_a: Ruta o path de la capa A
     :type vector_a: String
@@ -48,8 +50,10 @@ def area_km2(path_vector, nombre_campo):
     poligono en kilometros cuadrados.
 
     :param path_vector: ruta de la capa vectorial, debe estar en una proyeccion
-                        cartografica que exrprese sun unidades lineales,
+                        cartografica que exrprese sus unidades lineales,
                         ej: UTM14N o CCL
+    :type path_vector: String
+
     :param nombre_campo: ingresar el nombre del campo ej: area_km2
     :type nombre_campo: string
     """
@@ -76,11 +80,12 @@ def area_ha(path_vector, nombre_campo):
     Esta funcion genera un campo nuevo y calcula el area de cada
     poligono en hectareas Parametros:
 
-    :param path_vector: ruta de la capa vectorial, debe estar en una
-                        proyeccion cartografica que exrprese sun unidades
-                       lineales, ej: UTM14N o CCL
-    :param nombre_campo: ingresar el nombre del campo ej: area_ha
+    :param path_vector: ruta de la capa vectorial, debe estar en una \
+                        proyeccion cartografica que exrprese sus unidades \
+                        lineales, ej: UTM14N o CCL
+    :type path_vector: String
 
+    :param nombre_campo: ingresar el nombre del campo ej: area_ha
     :type nombre_campo: string
     """
 
@@ -107,7 +112,10 @@ def vcopia(path_vector, path_salida):
     la capa es creada con el mismo sistema de referencia que el origen.
 
     :param path_vector: ruta de la capa original
+    :type path_vector: String
+
     :param path_salida: ruta de donde sera almacenada la capa
+    :type path_salida: String
     """
     vlayer = QgsVectorLayer(path_vector, "", "ogr")
     clonarv = QgsVectorFileWriter.writeAsVectorFormat(vlayer,
@@ -117,18 +125,24 @@ def vcopia(path_vector, path_salida):
                                                       "ESRI Shapefile")
 
 
-def crear_campo(path_vector, nombre_campo, tipo):
-    ''' Crear_campo(path_vector,nombre_campo,tipo)
-    Esta funcion crea un campo segun el tipo especificado.
+def crear_campo( path_vector, nombre_campo, tipo):
+    ''' Esta funcion crea un campo segun el tipo especificado.
     Parametros:
-        path_vector: La ruta del archivo shapefile al cual se le quiere
-                      agregar el campo
-        nombre_campo: Nombre del campo nuevo
-        tipo: es el tipo de campo que se quiere crear:
-        Int: para crear un campo tipo entero
-        Double: para crear un campo tipo doble o flotante
-        String: para crear un campo tipo texto
-        Date: para crear un campo tipo fecha '''
+    :param path_vector: La ruta del archivo shapefile al cual se le quiere \
+                        agregar el campo
+    :type path_vector: String
+
+    :param nombre_campo: Nombre del campo nuevo
+    :type nombre_campo: Sting
+
+    :param tipo: es el tipo de campo que se quiere crear
+
+    Int: para crear un campo tipo entero
+    Double: para crear un campo tipo doble o flotante
+    String: para crear un campo tipo texto
+    Date: para crear un campo tipo fecha
+    :type tipo: String
+    '''
 
     if len(nombre_campo) > 10:
         print("el nombre del campo debe contener maximo 10 caracteres")
@@ -157,23 +171,77 @@ def crear_campo(path_vector, nombre_campo, tipo):
             print ("el tipo no existe o hay error en su declaracion")
 
 
-def colonia_ageb(path_salida,
-                 path_agebs,
-                 path_colonias,
-                 ageb_id,
-                 col_id,
-                 campos_resampling,
-                 nombre_temp):
+def id_texto(path_layer,nombre_id,):
     '''
-    Parametros:
-    path_salida = Ruta de la salida de los datos
-    path_agebs = ruta de la capa de agebs
-    path_colonias =  ruta de la capa de colonias
-    ageb_id = nombre del campo de id de los agebs
-    col_id = nombre del campo de id de la colonia
-    campos_resampling = nombre de los campos
-    nombre_temp = nombre del archivo que se genera al intersectar la copia de
-    colonias con la de agebs
+    Esta función genera un id numerico en un campo de tipo texto
+    :param path_layer: ruta del Shapefile
+    :type path_layer: String
+
+    :param nombre_id: Nombre del campo no mayor a 10 caracteres
+    :type nombre_id: String
+    '''
+
+    crear_campo(path_layer,nombre_id,"String")
+    layer =QgsVectorLayer(path_layer,"","ogr")
+    cont =1
+    layer.startEditing()
+    for ag in layer.getFeatures():
+        ag[nombre_id]=str(cont)
+        cont +=1
+        layer.updateFeature(ag)
+
+    layer.commitChanges()
+
+def id_int(path_layer,nombre_id,):
+    '''
+    Esta función genera un id numerico en un campo de tipo entero
+    :param path_layer: ruta del Shapefile
+    :type path_layer: String
+
+    :param nombre_id: Nombre del campo no mayor a 10 caracteres
+    :type nombre_id: String
+    '''
+
+    crear_campo(path_layer,nombre_id,"Int")
+    layer =QgsVectorLayer(path_layer,"","ogr")
+    cont =1
+    layer.startEditing()
+    for ag in layer.getFeatures():
+        ag[nombre_id]=cont
+        cont +=1
+        layer.updateFeature(ag)
+
+    layer.commitChanges()
+
+def colonia_ageb(path_salida, path_agebs, path_colonias,ageb_id, col_id,
+                 campos_resampling, nombre_temp):
+
+    '''
+    Esta función realiza un escalamiento de datos que estan a nivel geométrico
+    de colonía y los pasa a nivel de ageb.
+
+
+    :param path_salida: Ruta de la salida de la capa a nivel de ageb
+    :type path_salida: String
+
+    :param path_agebs: ruta de la capa de agebs
+    :type path_agebs: String
+
+    :param path_colonias:  ruta de la capa de colonias
+    :type path_colonias: String
+
+    :param ageb_id: nombre del campo de id de los agebs
+    :type ageb_id: String
+
+    :param col_id: nombre del campo de id de la colonia
+    :type col_id: String
+
+    :param campos_resampling: nombre de los campos de la cap de colonia
+    :type campos_resampling: List the strings
+
+    :param nombre_temp: nombre del archivo que se genera al intersectar la \
+                        copia de colonias con la de agebs
+    :type nombre_temp: String
     '''
     new_geom_id = ageb_id
     new_geom = QgsVectorLayer(path_agebs, "", "ogr")
@@ -255,16 +323,23 @@ def colonia_ageb(path_salida,
 
     new_geom.commitChanges()
 
-
 def est_raster_media(path_vector, path_raster, nombre_campo):
     '''
-    Esta funcion calcula la media de los valores de pixel
-    contenidos en un raster sobreponiendo una capa vectorial de poligonos
+    Esta funcion calcula la media de los valores de pixel de un raster
+    contenidos en un área superpuesta de una capa vectorial.
+
     Parametros:
-        path_vector = ruta de la capa que contendra los datos extraidos del archivo raster
-        path_raster = ruta de la capa raster de la cual se extraera el valor
-        nombre_campo = nombre del campo que se creara para agregar los valores de la capa
-        raster a la capa vectorial
+    :param path_vector: ruta de la capa que contendra los datos extraidos del \
+                        archivo raster
+    :type path_vector:String
+
+    :param path_raster: ruta de la capa raster de la cual se extraera el valor
+    :type path_raster: String
+
+    :param nombre_campo: nombre del campo que se creara para agregar los \
+                         valores de la capa raster a la capa vectorial
+    :type nombre_campo: String
+
     '''
     vector=QgsVectorLayer(path_vector, "", "ogr")
     zoneStat = QgsZonalStatistics(vector, path_raster,
@@ -274,12 +349,22 @@ def est_raster_media(path_vector, path_raster, nombre_campo):
 
 def raster_poligono(path_tif, path_s_vector, nombre_campo, epsg):
     """
-    Realiza el proceso de vectorizacion de una capa raster
+    Realiza el proceso de vectorización de una capa raster
     Parametros:
-        path_tif= ruta de la capa raster
-        path_s_vector= ruta de salida de la capa vectorial
-        nombre_campo= nombre de un nuevo campo que contiene los valores de pixel
-        epsg:
+
+    :param path_tif: ruta de la capa raster
+    :type path_tif: String
+
+    :param path_s_vector: ruta de salida de la capa vectorial
+    :type path_s_vector: String
+
+    :param nombre_campo: nombre de un nuevo campo que contiene los valores \
+                         de pixel
+    :type nombre_campo: String
+
+    :param epsg: Código EPSG para la zona 14N UTM con datum WGS84 el \
+                 código es 32614
+    :type epsg: Int
     """
     srs = osr.SpatialReference()
     srs.ImportFromEPSG(epsg)
@@ -305,13 +390,28 @@ def raster_poligono(path_tif, path_s_vector, nombre_campo, epsg):
 
 def union_csv_shape(path_csv, path_vector, n_campo_comun, path_salida):
     '''
-        Funcion para unir una base de datos csv a un archivo shapefile, por medio de un campo en comun.
-        El resultado es una nueva capa vectorial con la union tabular.
+        Función para unir una base de datos csv a un archivo shapefile, \
+        por medio de un campo en común.
+        El resultado es una nueva capa vectorial con la unión tabular.
         Parametros:
-            path_csv = ruta del archivo csv, usar / en vez de '\'
-            path_vector = ruta de la capa vectorial
-            n_campo_comun = nombre del campo en comun
-            path_salida = ruta de salida para la nueva capa vectorial que contiene la union
+
+        :param path_csv: ruta del archivo csv.
+        :type path_csv: String
+
+        :param path_vector: ruta de la capa vectorial
+        :type path_vector: String
+
+        :param n_campo_comun: nombre del campo en comun
+        :type n_campo_comun: String
+
+        :param path_salida: ruta de salida para la nueva capa vectorial que \
+                            contiene la union
+        :type path_salida: String
+
+        .. warning::
+
+            Para el separador de directorios en la ruta usar "/"
+
     '''
     vector = QgsVectorLayer(path_vector, "", "ogr")
     QgsMapLayerRegistry.instance().addMapLayer(vector)
@@ -345,19 +445,27 @@ def union_csv_shape(path_csv, path_vector, n_campo_comun, path_salida):
 
 def v_cortar(path_mask, path_zona, path_salida):
     '''
-    Esta funcion permite cortar dos capas vectoriales
+    Esta función permite cortar dos capas vectoriales
     Parametros:
-        path_mask= capa vectorial que sirve como mascara de recorte.
-        path_zona= capa vectorial de la capa a recortar.
-        path_salida= ruta de la capa generada por el proceso.
+
+    :param path_mask: ruta de la capa vectorial que sirve como mascara de corte.
+    :type path_mask: String
+
+    :param path_zona: ruta de la capa vectorial de la capa a cortar.
+    :type path_mask: String
+
+    :param path_salida: ruta de la capa generada por el proceso.
+    :type path_mask: String
     '''
     pr.runalg("saga:polygonclipping", path_mask, path_zona, path_salida)
 
 
 def lista_shp(path_carpeta):
     '''
-    Parametros:
-        path_carpeta = ruta que contiene los archivos shape a procesar
+
+
+    :param path_carpeta: ruta que contiene los archivos shape a procesar
+    :type path_carpeta: String
     '''
     for root, dirs, files in os.walk(path_carpeta):
         lista = []
@@ -369,48 +477,77 @@ def lista_shp(path_carpeta):
 
 
 def wgs84_a_utm(path_gws84, path_utm, zona_norte):
+    '''
+    Esta función reproyecta una capa que su sistema de referencía es WGS84 a
+    UTM
+
+    :param path_wgs84: Ruta de la capa vectorial
+    :type path _wgs84: String
+
+    :param path_utm: Ruta con nombre de la nueva capa reproyectada en UTM
+    :param path_utm: String
+
+    :param zona_norte: Número de zona UTM que le corresponde
+    :type zona_norte: Int
+
+    .. Note::
+
+       Las zonas UTM para México son :
+
+       ==== =================
+       Zona Meridiano central
+       ==== =================
+       11   87°W
+       12   93°W
+       13   99°W
+       14   105°W
+       15   111°W
+       16   117°W
+       ==== =================
+    '''
+
 
     vlayer = QgsVectorLayer(path_gws84,"","ogr")
 
     if zona_norte==11:
         crs = QgsCoordinateReferenceSystem("EPSG:32611")
         proyecta = QgsVectorFileWriter.writeAsVectorFormat(vlayer,
-                                                           path_utm16n,
+                                                           path_utm,
                                                            'utf-8',
                                                            crs,
                                                            "ESRI Shapefile")
     elif zona_norte==12:
         crs = QgsCoordinateReferenceSystem("EPSG:32612")
         proyecta = QgsVectorFileWriter.writeAsVectorFormat(vlayer,
-                                                           path_utm16n,
+                                                           path_utm,
                                                            'utf-8',
                                                            crs,
                                                            "ESRI Shapefile")
     elif zona_norte==13:
         crs = QgsCoordinateReferenceSystem("EPSG:32613")
         proyecta = QgsVectorFileWriter.writeAsVectorFormat(vlayer,
-                                                           path_utm16n,
+                                                           path_utm,
                                                            'utf-8',
                                                            crs,
                                                            "ESRI Shapefile")
     elif zona_norte==14:
         crs = QgsCoordinateReferenceSystem("EPSG:32614")
         proyecta = QgsVectorFileWriter.writeAsVectorFormat(vlayer,
-                                                           path_utm16n,
+                                                           path_utm,
                                                            'utf-8',
                                                            crs,
                                                            "ESRI Shapefile")
     elif zona_norte==15:
         crs = QgsCoordinateReferenceSystem("EPSG:32615")
         proyecta = QgsVectorFileWriter.writeAsVectorFormat(vlayer,
-                                                           path_utm16n,
+                                                           path_utm,
                                                            'utf-8',
                                                            crs,
                                                            "ESRI Shapefile")
     elif zona_norte==16:
         crs = QgsCoordinateReferenceSystem("EPSG:32616")
         proyecta = QgsVectorFileWriter.writeAsVectorFormat(vlayer,
-                                                           path_utm16n,
+                                                           path_utm,
                                                            'utf-8',
                                                            crs,
                                                            "ESRI Shapefile")
@@ -428,60 +565,61 @@ def proy_a_wgs84(path_capa, path_wgs84):
                                                        "ESRI Shapefile")
 
 
-def lista_archivos(lista_a, path, path_d, folders_check, tipo_ext):
+def lista_archivos(path_carpeta,extension):
     '''
-    Esta funcion recursiva regresa una lista que contiene los
-    archivos contenidos en un directorio segun el tipo de extension declarado.
+    Esta funcion regresa una lista que contiene los
+    archivos contenidos en un directorio segun el tipo de extensión declarado.
 
     Parametros:
-        lista_a=[]
-        path= ruta de la carpeta (primer nivel) que contiene los archivos
-        path_d= ruta de la carpeta (primer nivel) que contiene los archivos
-        folders_check= []
-        tipo_ext= se especifica la extension del archivo
+    :param path_carpeta: Ruta de la carpeta que contiene los datos
+    :type path_carpeta: String
+
+    :param extension: tipo de extensión, agregar un . al inicio ej '.tif'
+    :type extension: String
+
+    ::
+
         ejemplo:
-        lista_shapes=apc.lista_archivos([],path_sig,path_sig,[],"shp")
+        lista_shapes=apc.lista_archivos(path_sig,'.shp')
+
     '''
-    lista_tipo_ext = []
-    if (path_d != path):
-        folders_check.append(path_d)
-    for f in os.listdir(path_d):
-        d = path_d + f
-        if os.path.isdir(d) and d not in folders_check:
-            lista_archivos(lista_a,
-                           path,
-                           d + "/",
-                           folders_check,
-                           tipo_ext)
-        else:
-            if os.path.isfile(d):
-                lista_a.append(path_d+f)
-    for archivo in lista_a:
-        if archivo.endswith(tipo_ext):
-            lista_tipo_ext.append(archivo)
-    return lista_tipo_ext
+    for root, dirs, files in os.walk(path_carpeta):
+        lista = []
+        for name in files:
+            extension = os.path.splitext(name)
+            if extension[1] == extension:
+                lista.append(extension)
+    return lista
 
 
 def nombre_archivo(ruta):
     '''
-    Esta funcion extrae de la ruta el nombre del archivo shapefile
+    Esta funcion extrae de la ruta el nombre del archivo shapefile sin extensión
     Parametros:
-        ruta = ruta de la capa shapefile
+
+    :param ruta: ruta de la capa shapefile
+    :type ruta: String
+
     '''
     nombre_cort = ruta.split("/")[-1:]
     nombre = nombre_cort[0].split(".")[0]
     return nombre
 
 
-def validacion_prj(lista_paths):
+def validacion_prj(path_carpeta):
     '''
+    Esta función recibe una carpeta que contenga los archivos shapefile
+    y verifica que para cada archivo shapefile exista un archivo prj,
+    Regresa en una lista los archivos que no cumplen con esta condición
     Parametros:
 
-        lista_paths=ruta donde se encuentran los archivos shapefile
+    :param path_carpeta: ruta donde se encuentran los archivos shapefile
+    :type path_carpeta: String
+
     '''
     sin_proj = []
-    lista_shp = lista_archivos([], lista_paths, lista_paths, [], "shp")
-    lista_prj = lista_archivos([], lista_paths, lista_paths, [], "prj")
+    lista_shp = lista_archivos(path_carpeta, "shp")
+    lista_prj = lista_archivos(path_carpeta, "prj")
 
     for arch_shape in lista_shp:
         capa = arch_shape.split(".")[0]
@@ -495,7 +633,7 @@ def validacion_prj(lista_paths):
     return sin_proj
 
 
-def extension_capa(path_capa):
+def extension_capa(path_capa): #subfunción de crear_metadatos
     vlayer = QgsVectorLayer(path_capa, "", "ogr")
     lista=[]
     if vlayer.crs().authid() == "EPSG:4326":
@@ -532,24 +670,27 @@ def extension_capa(path_capa):
 
     return lista
 
-def borrar_shape(ruta_shape):
+def borrar_shape(ruta_shape): #subfunción
     path_dir = "/".join(ruta_shape.split("/")[:-1]) + "/"
     lista_archivos = os.listdir(path_dir)
     for archivo in lista_archivos:
         if archivo.split(".")[0] == nombre_archivo(ruta_shape):
             os.remove(path_dir+archivo)
 
-def clean_var(nombre_var):
-    gl=globals().copy()
-    for var in gl:
-        if var == nombre_var:
-            del globals()[var]
 
-def extension_vector(ruta_capa):
+def extension_vector(ruta_capa): #subfunción
+    '''Esta función regresa una lista con las coordendas de la extensión
+    geográfica de la capa.
+
+    :param ruta_capa: ruta de la capa vectorial en formato shapefile
+    :type ruta_capa: String
+
+
+    '''
     ruta= extension_capa(ruta_capa)
     borrar_shape(ruta)
 
-def campos_md(ruta_shape):
+def campos_md(ruta_shape): #subfunción
     layer = QgsVectorLayer(ruta_shape,"","ogr")
     nuevo_path = "/".join(ruta_shape.split("/")[:-1]) + "/"
     nombre="md_"+nombre_archivo(ruta_shape)+".md"
@@ -558,7 +699,10 @@ def campos_md(ruta_shape):
     archivo.write("Campo | Tipo | Descripción \n")
     archivo.write("--- | --- | --- |\n")
 
-    campos = [field.name()+" | "+field.typeName() + " | " for field in layer.fields()]
+    campos = [field.name()
+              +" | "
+              + field.typeName()
+              + " | " for field in layer.fields()]
 
     for campo in campos:
         archivo.write(campo+"\n")
@@ -633,12 +777,25 @@ def metadatos(ruta_shape):
                 if  not feature[field.name()] == NULL:
                     lista.append(feature[field.name()])
 
-
-            #print field.name()," | ",field.typeName()," | "," | ",min(lista),"-",max(lista),"\n"
-            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+str(min(lista))+" - "+str(max(lista))+" | "+"\n")
+            archivo.write(field.name()
+                          + " | "
+                          + field.typeName()
+                          + " | "
+                          + " | "
+                          + str(min(lista))
+                          + " - "
+                          + str(max(lista))
+                          + " | "
+                          + "\n")
         else:
             #print field.name()," | ",field.typeName()," | "," | "," ","\n"
-            archivo.write(field.name()+" | "+field.typeName()+" | "+" | "+" |"+"\n")
+            archivo.write(field.name()
+                          + " | "
+                          + field.typeName()
+                          + " | "
+                          + " | "
+                          + " |"
+                          + "\n")
 
 
 
@@ -649,6 +806,15 @@ def metadatos(ruta_shape):
     return ruta_temp
 
 def crear_metadatos(ruta_shape):
+    '''
+    Esta función generá un archivo MD que contiene la ruta, extensión geográfica
+    , nombre de campos y tipo, rango (en caso de aplicar). elementos básicos
+    para la generación de metadatos en geonetwork.
+
+    :param ruta_shape: ruta de la capa vectorial en formato shapefile
+    :type ruta_shape: String
+
+    '''
     capa = metadatos(ruta_shape)
     if capa == "":
         print ("se ha creado el archivo md en el direcctorio")
