@@ -1,1 +1,2 @@
 copy "C:\Dropbox (LANCIS)\CARPETAS_TRABAJO\vhernandez\codigos_github\libreria_apc\apc.py" "C:\Program Files\QGIS 2.18\bin"
+copy "C:\Dropbox (LANCIS)\CARPETAS_TRABAJO\vhernandez\codigos_github\libreria_apc\raster_apc.py" "C:\Program Files\QGIS 2.18\bin"
