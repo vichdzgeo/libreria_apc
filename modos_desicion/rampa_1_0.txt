@@ -1,0 +1,7 @@
+# Archivo de exportación de mapa de colores generado por QGIS
+INTERPOLATION:INTERPOLATED
+0,115,0,0,255,ma
+0.08,255,85,0,255,a
+0.17,255,255,0,255,M
+0.35,76,230,0,255,b
+1,38,115,0,255,mb

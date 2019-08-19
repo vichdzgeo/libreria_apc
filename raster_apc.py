@@ -889,3 +889,22 @@ def raster_calc_qgis(ecuacion,raster_inputs,raster_salida):
                                 entries)
                                 
     calc.processCalculation()
+
+
+def weber_fechner(fp,categorias,path_raster):
+    dicc_e = {}
+    min,max = raster_min_max(path_raster)
+    pm = max - min 
+    cats = numpy.power(fp , categorias)
+    e0 = pm/cats
+    for i in range(1 , categorias + 1):
+        dicc_e['e'+str(i)]= round((max - (numpy.power(fp,i) * e0)),2)
+
+    dicc_cortes ={}
+    for i in range(1 , categorias + 1):
+        dicc_cortes['corte'+str(i)]= round(1 - dicc_e['e'+str(i)],2)
+
+    print (dicc_cortes)
+
+
+    
